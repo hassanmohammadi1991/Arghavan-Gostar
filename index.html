@@ -1,0 +1,3113 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>داشبورد CMMS - مجتمع پتروشیمی ارغوان گستر ایلام</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f7fa;
+    --bg-card: #ffffff;
+    --text-primary: #1a2332;
+    --text-secondary: #5a6578;
+    --border-color: #e1e8f0;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #06b6d4;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+    --header-height: 50px;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #131824;
+    --bg-card: #1a2030;
+    --text-primary: #e8ecf4;
+    --text-secondary: #8b95a8;
+    --border-color: #2a3446;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --shadow: 0 2px 8px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+[data-theme="blue-light"] {
+    --bg-primary: #e8f1ff; --bg-secondary: #d6e4ff; --bg-card: #ffffff;
+    --text-primary: #0c2d5a; --text-secondary: #3d5a80; --border-color: #b8d0f0; --accent: #1e5fbf;
+}
+
+[data-theme="bone"] {
+    --bg-primary: #e8e4dc; --bg-secondary: #d8d3c8; --bg-card: #f0ece4;
+    --text-primary: #2c2820; --text-secondary: #5a5448; --border-color: #c8c2b4; --accent: #8b6f47;
+}
+
+[data-theme="cream"] {
+    --bg-primary: #faf5e8; --bg-secondary: #f0e8d0; --bg-card: #fffdf5;
+    --text-primary: #3d3420; --text-secondary: #6b5d40; --border-color: #e0d4b0; --accent: #b8860b;
+}
+
+[data-theme="cream-white"] {
+    --bg-primary: #fdfbf5; --bg-secondary: #f5f0e0; --bg-card: #ffffff;
+    --text-primary: #2c2418; --text-secondary: #6b5d40; --border-color: #e8dfc8; --accent: #a67c00;
+}
+
+[data-theme="industrial-blue"] {
+    --bg-primary: #f0f7ff; --bg-secondary: #e0efff; --bg-card: #ffffff;
+    --text-primary: #0a2540; --text-secondary: #4a6785; --border-color: #c4d9f0; --accent: #0066cc;
+    --gradient: linear-gradient(135deg, #0066cc 0%, #00a8e8 100%);
+}
+
+[data-theme="light-yellow"] {
+    --bg-primary: #fffef0; --bg-secondary: #fff8d6; --bg-card: #ffffff;
+    --text-primary: #3d3810; --text-secondary: #6b6030; --border-color: #f0e8a8; --accent: #d4a017;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
+body {
+    font-family: var(--font-family);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ================= هدر ================= */
+.header {
+    background: var(--gradient);
+    color: white;
+    padding: 0.4rem 1.25rem;
+    box-shadow: var(--shadow-lg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    gap: 1rem;
+}
+
+.logo-section { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+
+.logo-icon {
+    width: 34px; height: 34px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.logo-icon svg { width: 20px; height: 20px; fill: white; }
+.title-section h1 { font-size: 0.95rem; font-weight: 700; line-height: 1.2; }
+.title-section p { font-size: 0.68rem; opacity: 0.9; line-height: 1.2; }
+
+.theme-dropdown { position: relative; }
+
+.theme-dropdown-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    padding: 0.3rem 0.7rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.78rem;
+    display: flex; align-items: center; gap: 0.35rem;
+    backdrop-filter: blur(10px);
+}
+
+.theme-dropdown-btn:hover { background: rgba(255,255,255,0.25); }
+.theme-dropdown-btn svg { width: 13px; height: 13px; fill: white; transition: transform 0.2s; }
+.theme-dropdown.open .theme-dropdown-btn svg:last-child { transform: rotate(180deg); }
+
+.theme-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: var(--shadow-lg);
+    min-width: 170px;
+    padding: 0.35rem;
+    display: none;
+    z-index: 200;
+}
+
+.theme-dropdown.open .theme-dropdown-menu { display: block; animation: slideDown 0.2s ease; }
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.theme-option {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.45rem 0.55rem;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 0.82rem;
+}
+
+.theme-option:hover { background: var(--bg-secondary); }
+.theme-option.active { background: var(--accent); color: white; }
+
+.theme-swatch {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+/* ================= Toolbar ================= */
+.toolbar {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.4rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    position: sticky;
+    top: var(--header-height);
+    z-index: 99;
+    transition: opacity 0.3s, max-height 0.3s;
+}
+
+.toolbar.toolbar-hidden {
+    display: none;
+}
+
+.toolbar-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.toolbar-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.82rem;
+    display: flex; align-items: center; gap: 0.35rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.toolbar-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
+
+.toolbar-btn.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.toolbar-btn svg { width: 15px; height: 15px; fill: currentColor; }
+
+/* ================= بدنه ================= */
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem;
+}
+
+/* ================= آپلود ================= */
+.upload-section {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+}
+
+.upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 2.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--bg-secondary);
+}
+
+.upload-area:hover {
+    border-color: var(--accent);
+    background: var(--bg-primary);
+    transform: translateY(-2px);
+}
+
+.upload-icon {
+    width: 70px; height: 70px;
+    margin: 0 auto 1rem;
+    background: var(--gradient);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.upload-icon svg { width: 34px; height: 34px; fill: white; }
+.upload-area h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.upload-area p { color: var(--text-secondary); font-size: 0.85rem; }
+.file-input { display: none; }
+
+.upload-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.upload-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+/* ================= KPI Cards ================= */
+.kpi-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem;
+}
+
+.kpi-hero-card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 1.75rem 1.5rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: kpiSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.kpi-hero-card:nth-child(1) { animation-delay: 0.05s; }
+.kpi-hero-card:nth-child(2) { animation-delay: 0.15s; }
+.kpi-hero-card:nth-child(3) { animation-delay: 0.25s; }
+.kpi-hero-card:nth-child(4) { animation-delay: 0.35s; }
+.kpi-hero-card:nth-child(5) { animation-delay: 0.45s; }
+.kpi-hero-card:nth-child(6) { animation-delay: 0.55s; }
+.kpi-hero-card:nth-child(7) { animation-delay: 0.65s; }
+.kpi-hero-card:nth-child(8) { animation-delay: 0.75s; }
+
+@keyframes kpiSlideIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.kpi-hero-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.kpi-hero-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+    transform: rotate(45deg) translateX(-100%);
+    transition: transform 1s;
+    pointer-events: none;
+}
+
+.kpi-hero-card:hover::before { transform: rotate(45deg) translateX(100%); }
+
+.kpi-hero-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0; left: 0;
+    height: 5px;
+    background: var(--kpi-accent, var(--accent));
+    opacity: 0.9;
+    animation: barPulse 3s ease-in-out infinite;
+}
+
+@keyframes barPulse {
+    0%, 100% { opacity: 0.9; }
+    50% { opacity: 0.5; }
+}
+
+.kpi-hero-card[data-color="blue"] { --kpi-accent: #3b82f6; }
+.kpi-hero-card[data-color="red"] { --kpi-accent: #ef4444; }
+.kpi-hero-card[data-color="orange"] { --kpi-accent: #f59e0b; }
+.kpi-hero-card[data-color="purple"] { --kpi-accent: #8b5cf6; }
+.kpi-hero-card[data-color="green"] { --kpi-accent: #10b981; }
+.kpi-hero-card[data-color="pink"] { --kpi-accent: #ec4899; }
+.kpi-hero-card[data-color="cyan"] { --kpi-accent: #06b6d4; }
+.kpi-hero-card[data-color="indigo"] { --kpi-accent: #6366f1; }
+
+.kpi-hero-card .kpi-bg-glow {
+    position: absolute;
+    top: -30%; left: -30%;
+    width: 160%; height: 160%;
+    background: radial-gradient(circle, var(--kpi-accent, var(--accent)) 0%, transparent 70%);
+    opacity: 0.08;
+    pointer-events: none;
+    animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.08; transform: scale(1); }
+    50% { opacity: 0.15; transform: scale(1.1); }
+}
+
+.kpi-hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.kpi-hero-label {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    line-height: 1.4;
+    max-width: 70%;
+}
+
+.kpi-hero-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    animation: iconFloat 3s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-3px) rotate(-2deg); }
+    75% { transform: translateY(3px) rotate(2deg); }
+}
+
+.kpi-hero-icon svg {
+    width: 28px; height: 28px;
+    fill: white;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.kpi-hero-icon::before,
+.kpi-hero-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: inherit;
+    z-index: 1;
+}
+
+.kpi-hero-icon::before { animation: pulseRing1 2.5s ease-out infinite; }
+.kpi-hero-icon::after { animation: pulseRing2 2.5s ease-out infinite 0.5s; }
+
+@keyframes pulseRing1 {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+@keyframes pulseRing2 {
+    0% { transform: scale(1); opacity: 0.3; }
+    100% { transform: scale(1.8); opacity: 0; }
+}
+
+.kpi-hero-icon.c-blue { background: linear-gradient(135deg, #3b82f6, #1e40af); }
+.kpi-hero-icon.c-red { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+.kpi-hero-icon.c-orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.kpi-hero-icon.c-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+.kpi-hero-icon.c-green { background: linear-gradient(135deg, #10b981, #047857); }
+.kpi-hero-icon.c-pink { background: linear-gradient(135deg, #ec4899, #be185d); }
+.kpi-hero-icon.c-cyan { background: linear-gradient(135deg, #06b6d4, #0e7490); }
+.kpi-hero-icon.c-indigo { background: linear-gradient(135deg, #6366f1, #4338ca); }
+
+.kpi-hero-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+    font-variant-numeric: tabular-nums;
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--kpi-accent, var(--accent)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.kpi-hero-trend {
+    font-size: 0.82rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 2;
+    padding: 0.3rem 0.6rem;
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.kpi-hero-trend.up { color: var(--success); background: rgba(16, 185, 129, 0.1); }
+.kpi-hero-trend.down { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+.kpi-hero-trend svg { width: 12px; height: 12px; fill: currentColor; }
+
+/* ================= بخش‌ها ================= */
+.section-view { display: none; }
+.section-view.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= نمودارها ================= */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.15rem;
+}
+
+.chart-card {
+    background: var(--bg-card);
+    border-radius: 13px;
+    padding: 0.95rem 1.1rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.2s;
+}
+
+.chart-card:hover { box-shadow: var(--shadow-lg); }
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.chart-title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.chart-title-icon {
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.chart-title-icon svg { width: 14px; height: 14px; fill: white; }
+.chart-controls { display: flex; gap: 0.3rem; align-items: center; flex-wrap: wrap; }
+
+.time-selector {
+    display: flex;
+    background: var(--bg-secondary);
+    border-radius: 7px;
+    padding: 2px;
+    border: 1px solid var(--border-color);
+}
+
+.time-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.22rem 0.55rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.time-btn:hover { color: var(--text-primary); }
+
+.time-btn.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.chart-action-btn {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    padding: 0.28rem 0.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-family: inherit;
+    display: flex; align-items: center; gap: 0.2rem;
+}
+
+.chart-action-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.chart-action-btn svg { width: 11px; height: 11px; fill: currentColor; }
+
+.chart-container { position: relative; height: 270px; cursor: pointer; }
+.chart-card.full-width { grid-column: 1 / -1; }
+
+/* ================= Modal تمام‌صفحه ================= */
+.chart-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 1500;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    backdrop-filter: blur(6px);
+}
+
+.chart-modal.active { display: flex; animation: fadeIn 0.25s ease; }
+
+.chart-modal-content {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+}
+
+.chart-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 0.85rem;
+    flex-shrink: 0;
+}
+
+.chart-modal-title { font-size: 1.05rem; font-weight: 700; }
+
+.chart-modal-close {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 1.15rem;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.chart-modal-close:hover { background: var(--danger); color: white; border-color: var(--danger); }
+
+.chart-modal-body { flex: 1; position: relative; min-height: 0; }
+
+/* ================= گانت چارت حرفه‌ای ================= */
+.gantt-wrapper-professional {
+    background: var(--bg-card);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.gantt-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+    border-bottom: 2px solid var(--border-color);
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.gantt-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.gantt-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.gantt-toolbar-left {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.gantt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.gantt-btn:hover {
+    background: var(--bg-secondary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.gantt-btn-primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.gantt-btn-primary:hover {
+    background: var(--accent-hover);
+}
+
+.gantt-legend-modern {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.85rem 1.5rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.legend-green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.legend-purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.legend-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border-color);
+}
+
+.legend-stats {
+    display: flex;
+    gap: 0.75rem;
+    margin-right: auto;
+}
+
+.stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.stat-badge strong {
+    color: #10b981;
+    font-weight: 700;
+}
+
+.stat-purple strong {
+    color: #8b5cf6;
+}
+
+.gantt-container-modern {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.gantt-table-wrapper {
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.gantt-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 800px;
+}
+
+.gantt-table thead {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+}
+
+.gantt-table th {
+    padding: 1rem;
+    text-align: right;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+.gantt-col-dates {
+    width: 320px;
+    min-width: 320px;
+}
+
+.date-headers {
+    display: flex;
+    gap: 1rem;
+}
+
+.date-col {
+    flex: 1;
+    text-align: center;
+    padding: 0.25rem;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.gantt-col-chart {
+    position: relative;
+}
+
+.chart-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-scale {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.gantt-table tbody tr {
+    transition: all 0.2s;
+}
+
+.gantt-table tbody tr:hover {
+    background: var(--bg-secondary);
+}
+
+.gantt-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.date-cells {
+    display: flex;
+    gap: 1rem;
+}
+
+.date-cell {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.chart-cell {
+    position: relative;
+    height: 60px;
+    background: 
+        linear-gradient(90deg, 
+            rgba(0,0,0,0.03) 1px, 
+            transparent 1px
+        ),
+        linear-gradient(0deg, 
+            rgba(0,0,0,0.03) 1px, 
+            transparent 1px
+        );
+    background-size: 50px 100%, 100% 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.chart-bars {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    gap: 0.5rem;
+}
+
+.gantt-bar-modern {
+    position: relative;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.3s;
+    cursor: pointer;
+    min-width: 80px;
+}
+
+.gantt-bar-modern:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    z-index: 10;
+}
+
+.bar-green {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.bar-purple {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.bar-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: rgba(255,255,255,0.2);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    backdrop-filter: blur(4px);
+}
+
+.bar-chip svg {
+    width: 12px;
+    height: 12px;
+    fill: white;
+}
+
+.gantt-summary-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+}
+
+.summary-card {
+    background: var(--bg-card);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+.summary-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent) 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.25rem;
+}
+
+.summary-label {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* ================= جدول ================= */
+.table-section {
+    background: var(--bg-card);
+    border-radius: 13px;
+    padding: 0.95rem 1.1rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.15rem;
+    overflow: hidden;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+thead { background: var(--bg-secondary); position: sticky; top: 0; z-index: 10; }
+
+th {
+    padding: 0.55rem 0.45rem;
+    text-align: right;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+    white-space: nowrap;
+    font-size: 0.73rem;
+    position: relative;
+}
+
+th.filterable { cursor: pointer; }
+
+th .filter-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px; height: 16px;
+    margin-right: 0.2rem;
+    border-radius: 3px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+th .filter-icon svg { width: 10px; height: 10px; fill: var(--text-secondary); }
+th .filter-icon:hover { background: var(--accent); border-color: var(--accent); }
+th .filter-icon:hover svg { fill: white; }
+th .filter-icon.active { background: var(--accent); border-color: var(--accent); }
+th .filter-icon.active svg { fill: white; }
+
+.column-filter-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    min-width: 180px;
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 20;
+    padding: 0.4rem;
+    display: none;
+}
+
+.column-filter-dropdown.show { display: block; animation: slideDown 0.15s ease; }
+
+.column-filter-dropdown .cf-search {
+    width: 100%;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.75rem;
+    margin-bottom: 0.3rem;
+}
+
+.column-filter-dropdown .cf-option {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.4rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.78rem;
+}
+
+.column-filter-dropdown .cf-option:hover { background: var(--bg-secondary); }
+.column-filter-dropdown .cf-option input { accent-color: var(--accent); }
+
+.column-filter-dropdown .cf-actions {
+    display: flex;
+    gap: 0.3rem;
+    margin-top: 0.3rem;
+    padding-top: 0.3rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.column-filter-dropdown .cf-btn {
+    flex: 1;
+    padding: 0.3rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.72rem;
+    cursor: pointer;
+}
+
+.column-filter-dropdown .cf-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+td {
+    padding: 0.45rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--bg-secondary); }
+
+.priority-badge {
+    display: inline-block;
+    padding: 0.12rem 0.45rem;
+    border-radius: 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.priority-high { background: #fee2e2; color: #991b1b; }
+.priority-medium { background: #fef3c7; color: #92400e; }
+.priority-low { background: #d1fae5; color: #065f46; }
+
+.status-badge {
+    display: inline-block;
+    padding: 0.12rem 0.45rem;
+    border-radius: 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.status-done { background: #d1fae5; color: #065f46; }
+.status-progress { background: #dbeafe; color: #1e40af; }
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-delayed { background: #fee2e2; color: #991b1b; }
+
+/* ================= گزارش ================= */
+.report-section {
+    background: var(--bg-card);
+    border-radius: 13px;
+    padding: 1.15rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.15rem;
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 2px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.report-title { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 0.45rem; }
+.report-content { font-size: 0.82rem; line-height: 1.8; }
+
+.report-item {
+    padding: 0.65rem 0.85rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    margin-bottom: 0.45rem;
+    border-right: 3px solid var(--accent);
+}
+
+/* ================= Modal جزئیات ================= */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+}
+
+.modal.active { display: flex; }
+
+.modal-content {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 1.4rem;
+    max-width: 580px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.modal-close:hover { background: var(--bg-secondary); color: var(--danger); }
+
+.btn {
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 500;
+}
+
+.btn svg { width: 12px; height: 12px; fill: currentColor; }
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+/* ================= Loading و Toast ================= */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.85rem;
+    color: white;
+}
+
+.loading-overlay.active { display: flex; }
+
+.spinner {
+    width: 46px; height: 46px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    padding: 0.7rem 1.2rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow-lg);
+    z-index: 3000;
+    transition: transform 0.3s;
+    font-size: 0.82rem;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+.empty-state { text-align: center; padding: 2rem 1rem; color: var(--text-secondary); }
+
+/* ================= Responsive ================= */
+@media (max-width: 768px) {
+    .header { padding: 0.35rem 0.75rem; }
+    .title-section h1 { font-size: 0.82rem; }
+    .title-section p { font-size: 0.62rem; }
+    .logo-icon { width: 28px; height: 28px; }
+    .logo-icon svg { width: 16px; height: 16px; }
+    .container { padding: 0.65rem; }
+    .kpi-hero-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .kpi-hero-card { padding: 1.25rem 1rem; }
+    .kpi-hero-value { font-size: 1.75rem; }
+    .kpi-hero-icon { width: 44px; height: 44px; }
+    .kpi-hero-icon svg { width: 22px; height: 22px; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .chart-container { height: 230px; }
+    .toolbar-content { overflow-x: auto; }
+    .toolbar-btn { padding: 0.35rem 0.6rem; font-size: 0.75rem; }
+    .gantt-toolbar { flex-direction: column; align-items: stretch; }
+    .gantt-toolbar-left { justify-content: stretch; }
+    .gantt-btn { flex: 1; justify-content: center; }
+    .gantt-legend-modern { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+    .legend-stats { margin-right: 0; justify-content: center; }
+    .gantt-col-dates { width: 250px; min-width: 250px; }
+    .date-cells { flex-direction: column; gap: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+    .kpi-hero-grid { grid-template-columns: 1fr; }
+}
+
+.hidden { display: none !important; }
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
+</head>
+<body data-theme="white">
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div>در حال پردازش داده‌ها...</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ================= هدر ================= -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo-section">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.3L19.5 8 12 11.7 4.5 8 12 4.3zM4 9.5l7 3.5v7.7L4 17.2V9.5zm9 11.2V13l7-3.5v7.7l-7 3.5z"/></svg>
+            </div>
+            <div class="title-section">
+                <h1>داشبورد CMMS توقفات</h1>
+                <p>پتروشیمی ارغوان گستر ایلام</p>
+            </div>
+        </div>
+        <div class="theme-dropdown" id="themeDropdown">
+            <button class="theme-dropdown-btn" onclick="toggleThemeDropdown(event)">
+                <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8z"/></svg>
+                <span id="currentThemeName">تم سفید</span>
+                <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </button>
+            <div class="theme-dropdown-menu">
+                <div class="theme-option active" data-theme="white" onclick="setTheme('white')">
+                    <div class="theme-swatch" style="background: linear-gradient(135deg, #fff, #e0e0e0);"></div><span>تم سفید</span>
+                </div>
+                <div class="theme-option" data-theme="dark" onclick="setTheme('dark')">
+                    <div class="theme-swatch" style="background: linear-gradient(135deg, #0a0e1a, #1a2030);"></div><span>تم مشکی</span>
+                </div>
+                <div class="theme-option" data-theme="blue-light" onclick="setTheme('blue-light')">
+                    <div class="theme-swatch" style="background: linear-gradient(135deg, #e8f1ff, #b8d0f0);"></div><span>آبی کم‌رنگ</span>
+                </div>
+                <div class="theme-option" data-theme="bone" onclick="setTheme('bone')">
+                    <div class="theme-swatch" style="background: linear-gradient(135deg, #e8e4dc, #c8c2b4);"></div><span>استخوانی</span>
+                </div>
+                <div class="theme-option" data-theme="cream" onclick="setTheme('cream')">
+                    <div class="theme-swatch" style="background: linear-gradient(135deg, #faf5e8, #e0d4b0);"></div><span>کرمی</span>
+                </div>
+                <div class="theme-option" data-theme="cream-white" onclick="setTheme('cream-white')">
+                    <div class="theme-swatch" style="background: linear-gradient(135deg, #fffdf5, #f0e8d0);"></div><span>کرمی و سفید</span>
+                </div>
+                <div class="theme-option" data-theme="industrial-blue" onclick="setTheme('industrial-blue')">
+                    <div class="theme-swatch" style="background: linear-gradient(135deg, #0066cc, #00a8e8);"></div><span>آبی صنعتی</span>
+                </div>
+                <div class="theme-option" data-theme="light-yellow" onclick="setTheme('light-yellow')">
+                    <div class="theme-swatch" style="background: linear-gradient(135deg, #fffef0, #f0e8a8);"></div><span>زرد کم‌رنگ</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ================= Toolbar ================= -->
+<nav class="toolbar toolbar-hidden" id="mainToolbar">
+    <div class="toolbar-content">
+        <button class="toolbar-btn active" data-section="overview" onclick="switchSection('overview', this)">
+            <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+            نمای کلی
+        </button>
+        <button class="toolbar-btn" data-section="dashboard" onclick="switchSection('dashboard', this)">
+            <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+            نمودارها
+        </button>
+        <button class="toolbar-btn" data-section="gantt" onclick="switchSection('gantt', this)">
+            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+            گانت چارت
+        </button>
+        <button class="toolbar-btn" data-section="table" onclick="switchSection('table', this)">
+            <svg viewBox="0 0 24 24"><path d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"/></svg>
+            جدول
+        </button>
+        <button class="toolbar-btn" data-section="report" onclick="switchSection('report', this)">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            گزارش
+        </button>
+    </div>
+</nav>
+
+<input type="file" class="file-input" id="fileInput" accept=".xlsx,.xls,.csv">
+
+<div class="container">
+
+    <!-- آپلود -->
+    <section class="upload-section" id="uploadSection">
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM9 13h6v2H9v-2zm0 4h6v2H9v-2zm0-8h3v2H9V9z"/></svg>
+            </div>
+            <h3>بارگذاری فایل اکسل داده‌های توقفات</h3>
+            <p>فایل Excel را اینجا بکشید یا روی دکمه زیر کلیک کنید</p>
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                انتخاب فایل
+            </button>
+        </div>
+    </section>
+
+    <!-- محتوای داشبورد -->
+    <div id="dashboardContent" class="hidden">
+
+        <!-- نمای کلی -->
+        <section class="section-view active" id="section-overview">
+            <div class="kpi-hero-grid" id="kpiHeroGrid"></div>
+        </section>
+
+        <!-- نمودارها -->
+        <section class="section-view" id="section-dashboard">
+            <div class="charts-grid">
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <div class="chart-title-icon" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
+                                <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+                            </div>
+                            روند مدت توقفات
+                        </div>
+                        <div class="chart-controls">
+                            <div class="time-selector" data-chart="trendChart">
+                                <button class="time-btn" data-range="day">روز</button>
+                                <button class="time-btn active" data-range="month">ماه</button>
+                                <button class="time-btn" data-range="year">سال</button>
+                            </div>
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('trendChart')">
+                                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            </button>
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); openChartFullscreen('trendChart', 'روند مدت توقفات')">
+                                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container" onclick="openChartFullscreen('trendChart', 'روند مدت توقفات')">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <div class="chart-title-icon" style="background: linear-gradient(135deg, #14b8a6, #0d9488);">
+                                <svg viewBox="0 0 24 24"><path d="M16 6l-4 4-4-4H4v14h16V6h-4zm2 12H6V8h2.83l3.17 3.17L15.17 8H18v10z"/></svg>
+                            </div>
+                            روند تجمعی ساعت توقف و تولید از دست‌رفته
+                        </div>
+                        <div class="chart-controls">
+                            <div class="time-selector" data-chart="cumulativeChart">
+                                <button class="time-btn" data-range="day">روز</button>
+                                <button class="time-btn active" data-range="month">ماه</button>
+                                <button class="time-btn" data-range="year">سال</button>
+                            </div>
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('cumulativeChart')">
+                                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            </button>
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); openChartFullscreen('cumulativeChart', 'روند تجمعی')">
+                                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container" onclick="openChartFullscreen('cumulativeChart', 'روند تجمعی')">
+                        <canvas id="cumulativeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <div class="chart-title-icon" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
+                                <svg viewBox="0 0 24 24"><path d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm1-5C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2z"/></svg>
+                            </div>
+                            توزیع بر اساس نوع توقف
+                        </div>
+                        <div class="chart-controls">
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('typeChart')">
+                                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            </button>
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); openChartFullscreen('typeChart', 'توزیع نوع توقفات')">
+                                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container" onclick="openChartFullscreen('typeChart', 'توزیع نوع توقفات')">
+                        <canvas id="typeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <div class="chart-title-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            </div>
+                            توزیع بر اساس دسته علت
+                        </div>
+                        <div class="chart-controls">
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('causeChart')">
+                                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            </button>
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); openChartFullscreen('causeChart', 'توزیع دسته علل')">
+                                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container" onclick="openChartFullscreen('causeChart', 'توزیع دسته علل')">
+                        <canvas id="causeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <div class="chart-title-icon" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+                                <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13z"/></svg>
+                            </div>
+                            تولید از دست‌رفته بر اساس واحد
+                        </div>
+                        <div class="chart-controls">
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('lossChart')">
+                                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            </button>
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); openChartFullscreen('lossChart', 'تولید از دست رفته')">
+                                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container" onclick="openChartFullscreen('lossChart', 'تولید از دست رفته')">
+                        <canvas id="lossChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <div class="chart-title-icon" style="background: linear-gradient(135deg, #10b981, #047857);">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            وضعیت اقدامات
+                        </div>
+                        <div class="chart-controls">
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('statusChart')">
+                                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            </button>
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); openChartFullscreen('statusChart', 'وضعیت اقدامات')">
+                                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container" onclick="openChartFullscreen('statusChart', 'وضعیت اقدامات')">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <div class="chart-title-icon" style="background: linear-gradient(135deg, #06b6d4, #0e7490);">
+                                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z"/></svg>
+                            </div>
+                            توزیع بر اساس مسئول پیگیری
+                        </div>
+                        <div class="chart-controls">
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('responsibleChart')">
+                                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            </button>
+                            <button class="chart-action-btn" onclick="event.stopPropagation(); openChartFullscreen('responsibleChart', 'توزیع مسئولین')">
+                                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container" onclick="openChartFullscreen('responsibleChart', 'توزیع مسئولین پیگیری')">
+                        <canvas id="responsibleChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- گانت چارت حرفه‌ای -->
+        <section class="section-view" id="section-gantt">
+            <div class="gantt-wrapper-professional">
+                <!-- Toolbar زیبا -->
+                <div class="gantt-toolbar">
+                    <div class="gantt-toolbar-right">
+                        <div class="gantt-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#2563eb">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                            </svg>
+                            <span>گانت چارت توقفات</span>
+                        </div>
+                    </div>
+                    <div class="gantt-toolbar-left">
+                        <button class="gantt-btn" onclick="exportGanttToExcel()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                            </svg>
+                            خروجی اکسل
+                        </button>
+                        <button class="gantt-btn gantt-btn-primary" onclick="refreshGantt()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                            </svg>
+                            به‌روزرسانی
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="gantt-legend-modern">
+                    <div class="legend-item">
+                        <div class="legend-color legend-green"></div>
+                        <span>مدت توقف (ساعت)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-purple"></div>
+                        <span>تولید از دست‌رفته (مق)</span>
+                    </div>
+                    <div class="legend-divider"></div>
+                    <div class="legend-stats">
+                        <span class="stat-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                            مجموع: <strong id="ganttTotalHours">0</strong> ساعت
+                        </span>
+                        <span class="stat-badge stat-purple">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 6l-4 4-4-4H4v14h16V6h-4zm2 12H6V8h2.83l3.17 3.17L15.17 8H18v10z"/>
+                            </svg>
+                            مجموع: <strong id="ganttTotalLoss">0</strong> مق
+                        </span>
+                    </div>
+                </div>
+
+                <!-- گانت چارت اصلی -->
+                <div class="gantt-container-modern">
+                    <div class="gantt-table-wrapper">
+                        <table class="gantt-table">
+                            <thead>
+                                <tr>
+                                    <th class="gantt-col-dates">
+                                        <div class="date-headers">
+                                            <div class="date-col">تاریخ شروع (شمسی)</div>
+                                            <div class="date-col">تاریخ پایان (شمسی)</div>
+                                        </div>
+                                    </th>
+                                    <th class="gantt-col-chart">
+                                        <div class="chart-header-content">
+                                            <span>نمودار زمانی توقفات</span>
+                                            <div class="time-scale" id="ganttTimeScale"></div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="ganttTableBody">
+                                <!-- محتوا توسط جاوااسکریپت پر می‌شود -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="gantt-summary-modern" id="ganttSummaryModern">
+                    <!-- کارت‌ها توسط جاوااسکریپت پر می‌شوند -->
+                </div>
+            </div>
+        </section>
+
+        <!-- جدول -->
+        <section class="section-view" id="section-table">
+            <div class="table-section">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <div class="chart-title-icon" style="background: linear-gradient(135deg, #6366f1, #4338ca);">
+                            <svg viewBox="0 0 24 24"><path d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"/></svg>
+                        </div>
+                        جدول خطی توقفات
+                        <span id="tableCount" style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;"></span>
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-action-btn" onclick="clearTableFilters()">
+                            <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                            پاک‌کردن فیلترها
+                        </button>
+                        <button class="chart-action-btn" onclick="exportTableToExcel()">
+                            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            Excel
+                        </button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="dataTable">
+                        <thead><tr id="tableHeader"></tr></thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- گزارش -->
+        <section class="section-view" id="section-report">
+            <div class="report-section">
+                <div class="report-header">
+                    <div class="report-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                        گزارش خلاصه مدیریتی
+                    </div>
+                    <button class="btn btn-primary" onclick="exportReport()">
+                        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        چاپ گزارش
+                    </button>
+                </div>
+                <div class="report-content" id="reportContent"></div>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<!-- Modal تمام‌صفحه نمودار -->
+<div class="chart-modal" id="chartModal">
+    <div class="chart-modal-content">
+        <div class="chart-modal-header">
+            <div class="chart-modal-title" id="chartModalTitle">نمودار</div>
+            <button class="chart-modal-close" onclick="closeChartModal()">×</button>
+        </div>
+        <div class="chart-modal-body">
+            <canvas id="chartModalCanvas"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Modal جزئیات -->
+<div class="modal" id="detailModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">جزئیات توقف</h3>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+/* =========================================================
+   متغیرهای سراسری
+========================================================= */
+let rawData = [];
+let filteredData = [];
+let tableFilteredData = [];
+let charts = {};
+let fullscreenChart = null;
+let columnFilters = {};
+
+let chartTimeRanges = {
+    trendChart: 'month',
+    cumulativeChart: 'month',
+    typeChart: 'month',
+    causeChart: 'month',
+    lossChart: 'month'
+};
+
+const PERSIAN_DIGITS = ['۰','۱','۲','۳','۴','','۶','۷','۸','۹'];
+const THEME_NAMES = {
+    'white': 'تم سفید', 'dark': 'تم مشکی', 'blue-light': 'آبی کم‌رنگ',
+    'bone': 'استخوانی', 'cream': 'کرمی', 'cream-white': 'کرمی و سفید',
+    'industrial-blue': 'آبی صنعتی', 'light-yellow': 'زرد کم‌رنگ'
+};
+
+/* =========================================================
+   تاریخ شمسی
+========================================================= */
+function persianToEnglish(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/[۰-۹]/g, d => PERSIAN_DIGITS.indexOf(d))
+                      .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+}
+
+function gregorianToJalali(gy, gm, gd) {
+    var g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
+    var jy = (gy <= 1600) ? 0 : 979;
+    gy -= (gy <= 1600) ? 621 : 1600;
+    var gy2 = (gm > 2) ? (gy + 1) : gy;
+    var days = (365*gy) + (parseInt((gy2+3)/4)) - (parseInt((gy2+99)/100)) 
+             + (parseInt((gy2+399)/400)) - 80 + gd + g_d_m[gm-1];
+    jy += 33 * (parseInt(days/12053));
+    days %= 12053;
+    jy += 4*(parseInt(days/1461));
+    days %= 1461;
+    if(days > 365) { jy += parseInt((days-1)/365); days = (days-1)%365; }
+    var jm = (days < 186) ? 1 + parseInt(days/31) : 7 + parseInt((days-186)/30);
+    var jd = 1 + ((days < 186) ? (days%31) : ((days-186)%30));
+    return [jy, jm, jd];
+}
+
+function jalaliToGregorian(jy, jm, jd) {
+    var gy = (jy <= 979) ? 621 : 1600;
+    jy -= (jy <= 979) ? 0 : 979;
+    var days = (365*jy) + ((parseInt(jy/33))*8) + (parseInt(((jy%33)+3)/4))
+             + 78 + jd + ((jm<7) ? (jm-1)*31 : ((jm-7)*30)+186);
+    gy += 400*(parseInt(days/146097));
+    days %= 146097;
+    if(days > 36521) { gy += 100*(parseInt(--days/36524)); days %= 36524; if(days >= 365) days++; }
+    gy += 4*(parseInt(days/1461));
+    days %= 1461;
+    if(days > 365) { gy += parseInt((days-1)/365); days = (days-1)%365; }
+    var gd = days + 1;
+    var sal_a = [0,31,((gy%4===0 && gy%100!==0) || (gy%400===0))?29:28,31,30,31,30,31,31,30,31,30,31];
+    var gm;
+    for(gm=0; gm<13 && gd>sal_a[gm]; gm++) gd -= sal_a[gm];
+    return [gy, gm, gd];
+}
+
+function parseJalaliDate(str) {
+    if (!str) return null;
+    str = persianToEnglish(str).trim();
+    var parts = str.split(/[\/\-]/);
+    if (parts.length !== 3) return null;
+    var y = parseInt(parts[0]), m = parseInt(parts[1]), d = parseInt(parts[2]);
+    if (isNaN(y) || isNaN(m) || isNaN(d)) return null;
+    if (y < 100) y += 1300;
+    return { y, m, d };
+}
+
+function jalaliToTimestamp(j) {
+    if (!j) return 0;
+    var g = jalaliToGregorian(j.y, j.m, j.d);
+    return new Date(g[0], g[1]-1, g[2]).getTime();
+}
+
+function formatNumber(num) {
+    if (num === null || num === undefined || isNaN(num)) return '۰';
+    return Number(num).toLocaleString('fa-IR');
+}
+
+function animateValue(element, start, end, duration, suffix = '') {
+    const startTime = performance.now();
+    const isFloat = String(end).includes('.');
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = start + (end - start) * easeOut;
+        if (isFloat) {
+            element.textContent = formatNumber(Math.round(current * 10) / 10) + suffix;
+        } else {
+            element.textContent = formatNumber(Math.round(current)) + suffix;
+        }
+        if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+}
+
+/* =========================================================
+   تم
+========================================================= */
+function setTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-option').forEach(o => {
+        o.classList.toggle('active', o.dataset.theme === theme);
+    });
+    document.getElementById('currentThemeName').textContent = THEME_NAMES[theme] || theme;
+    document.getElementById('themeDropdown').classList.remove('open');
+    if (rawData.length > 0) {
+        setTimeout(() => renderAllCharts(), 100);
+    }
+}
+
+function toggleThemeDropdown(e) {
+    e.stopPropagation();
+    document.getElementById('themeDropdown').classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('#themeDropdown')) {
+        document.getElementById('themeDropdown').classList.remove('open');
+    }
+    if (!e.target.closest('.column-filter-dropdown') && !e.target.closest('.filter-icon')) {
+        document.querySelectorAll('.column-filter-dropdown.show').forEach(d => d.classList.remove('show'));
+    }
+});
+
+/* =========================================================
+   Toolbar
+========================================================= */
+function switchSection(section, btn) {
+    document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.toolbar-btn[data-section]').forEach(b => b.classList.remove('active'));
+    document.getElementById('section-' + section).classList.add('active');
+    if (btn) btn.classList.add('active');
+    
+    if (section === 'overview' && rawData.length > 0) {
+        setTimeout(() => renderKPIs(), 50);
+    }
+    if (section === 'dashboard' && rawData.length > 0) {
+        setTimeout(() => renderAllCharts(), 50);
+    }
+    if (section === 'gantt' && rawData.length > 0) {
+        setTimeout(() => renderGantt(), 50);
+    }
+}
+
+/* =========================================================
+   آپلود فایل
+========================================================= */
+const fileInput = document.getElementById('fileInput');
+const uploadArea = document.getElementById('uploadArea');
+
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = 'var(--accent)';
+});
+
+uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = ''; });
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '';
+    const file = e.dataTransfer.files[0];
+    if (file) processFile(file);
+});
+
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) processFile(file);
+});
+
+function processFile(file) {
+    showLoading();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array', cellDates: false });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet, { defval: '', raw: false });
+            
+            if (jsonData.length === 0) {
+                showToast('فایل خالی است');
+                hideLoading();
+                return;
+            }
+            
+            rawData = normalizeData(jsonData);
+            filteredData = [...rawData];
+            tableFilteredData = [...rawData];
+            columnFilters = {};
+            
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('dashboardContent').classList.remove('hidden');
+            
+            // نمایش toolbar بعد از آپلود موفق
+            document.getElementById('mainToolbar').classList.remove('toolbar-hidden');
+            
+            renderAll();
+            showToast(`${formatNumber(rawData.length)} رکورد بارگذاری شد`);
+            hideLoading();
+        } catch (err) {
+            console.error(err);
+            showToast('خطا: ' + err.message);
+            hideLoading();
+        }
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+/* =========================================================
+   نرمال‌سازی
+========================================================= */
+function normalizeData(data) {
+    return data.map((row, idx) => {
+        const mapped = {};
+        Object.keys(row).forEach(k => { mapped[k.trim()] = row[k]; });
+        
+        return {
+            rowIndex: idx + 1,
+            row: mapped,
+            stopCode: getVal(mapped, ['ردیف', 'کد توقف', 'کد']),
+            company: getVal(mapped, ['شرکت']),
+            unit: getVal(mapped, ['واحد']),
+            product: getVal(mapped, ['محصول']),
+            startDateStr: getVal(mapped, ['تاریخ شروع (شمسی)', 'تاریخ شروع']),
+            startTime: getVal(mapped, ['ساعت شروع']),
+            endDateStr: getVal(mapped, ['تاریخ پایان (شمسی)', 'تاریخ پایان']),
+            endTime: getVal(mapped, ['ساعت پایان']),
+            durationHours: parseFloat(persianToEnglish(getVal(mapped, ['مدت توقف (ساعت)', 'مدت توقف ساعت', 'مدت توقف'])) || 0),
+            durationDays: parseFloat(persianToEnglish(getVal(mapped, ['مدت توقف (روز)', 'مدت توقف روز'])) || 0),
+            stopType: getVal(mapped, ['نوع توقف']),
+            causeCategory: getVal(mapped, ['دسته علت']),
+            causeDesc: getVal(mapped, ['شرح علت توقف', 'شرح علت']),
+            rootCause: getVal(mapped, ['ریشه مشکل', 'ریشه علت']),
+            productionEffect: getVal(mapped, ['اثر بر تولید']),
+            designRate: parseFloat(persianToEnglish(getVal(mapped, ['ظرفیت/نرخ طراحی ساعتی', 'ظرفیت نرخ طراحی ساعتی', 'نرخ طراحی'])) || 0),
+            lostProduction: parseFloat(persianToEnglish(getVal(mapped, ['تولید از دست‌رفته', 'تولید از دست رفته'])) || 0),
+            responsible: getVal(mapped, ['مسئول پیگیری', 'مسئول']),
+            correctiveAction: getVal(mapped, ['اقدام اصلاحی/پیشگیرانه', 'اقدام اصلاحی', 'اقدام']),
+            deadlineStr: getVal(mapped, ['مهلت اقدام (شمسی)', 'مهلت اقدام']),
+            actionStatus: getVal(mapped, ['وضعیت اقدام', 'وضعیت']),
+            priority: getVal(mapped, ['اولویت']),
+            notes: getVal(mapped, ['توضیحات'])
+        };
+    }).map(item => {
+        item.startDate = parseJalaliDate(item.startDateStr);
+        item.endDate = parseJalaliDate(item.endDateStr);
+        item.deadline = parseJalaliDate(item.deadlineStr);
+        item.startTimestamp = jalaliToTimestamp(item.startDate);
+        item.endTimestamp = jalaliToTimestamp(item.endDate);
+        
+        if (item.durationHours === 0 && item.startTimestamp && item.endTimestamp) {
+            item.durationHours = (item.endTimestamp - item.startTimestamp) / 3600000;
+        }
+        if (item.durationDays === 0 && item.durationHours > 0) item.durationDays = item.durationHours / 24;
+        if (item.lostProduction === 0 && item.designRate > 0 && item.durationHours > 0) {
+            item.lostProduction = item.designRate * item.durationHours;
+        }
+        
+        return item;
+    }).filter(item => item.startDate || item.stopCode || item.unit);
+}
+
+function getVal(obj, keys) {
+    for (const k of keys) {
+        if (obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return String(obj[k]).trim();
+    }
+    return '';
+}
+
+/* =========================================================
+   رندر کل
+========================================================= */
+function renderAll() {
+    renderKPIs();
+    renderAllCharts();
+    renderTable();
+    renderGantt();
+    renderReport();
+}
+
+/* =========================================================
+   KPI
+========================================================= */
+function renderKPIs() {
+    const total = filteredData.length;
+    const totalHours = filteredData.reduce((s, d) => s + d.durationHours, 0);
+    const totalDays = filteredData.reduce((s, d) => s + d.durationDays, 0);
+    const totalLoss = filteredData.reduce((s, d) => s + d.lostProduction, 0);
+    const avgHours = total > 0 ? totalHours / total : 0;
+    
+    const unplannedStops = filteredData.filter(d => d.stopType && !d.stopType.includes('برنامه'));
+    const doneActions = filteredData.filter(d => d.actionStatus && 
+        (d.actionStatus.includes('انجام') || d.actionStatus.includes('تکمیل') || d.actionStatus.includes('بسته'))).length;
+    const delayedActions = filteredData.filter(d => d.actionStatus && 
+        (d.actionStatus.includes('عقب') || d.actionStatus.includes('تاخیر'))).length;
+    const pendingActions = filteredData.filter(d => d.actionStatus && 
+        (d.actionStatus.includes('در انتظار') || d.actionStatus.includes('در حال'))).length;
+    const highPriority = filteredData.filter(d => d.priority && 
+        (d.priority.includes('بالا') || d.priority.includes('بحرانی'))).length;
+    
+    const kpis = [
+        { icon: 'clock', color: 'blue', label: 'تعداد کل توقفات', value: total, suffix: '', trend: 'رکورد ثبت شده', trendIcon: 'info' },
+        { icon: 'timer', color: 'red', label: 'مجموع مدت توقف', value: Math.round(totalHours*10)/10, suffix: ' ساعت', trend: `معادل ${formatNumber(Math.round(totalDays))} روز`, trendIcon: 'calendar' },
+        { icon: 'loss', color: 'orange', label: 'تولید از دست‌رفته', value: Math.round(totalLoss), suffix: '', trend: 'واحد تولید', trendIcon: 'down', trendClass: 'down' },
+        { icon: 'avg', color: 'purple', label: 'میانگین MTTR', value: Math.round(avgHours*10)/10, suffix: ' ساعت', trend: 'برای هر توقف', trendIcon: 'info' },
+        { icon: 'check', color: 'green', label: 'اقدامات انجام شده', value: doneActions, suffix: '', trend: `از ${formatNumber(total)} مورد`, trendIcon: 'up', trendClass: 'up' },
+        { icon: 'warning', color: 'pink', label: 'اقدامات معوق', value: pendingActions + delayedActions, suffix: '', trend: `${formatNumber(delayedActions)} عقب‌افتاده`, trendIcon: delayedActions > 0 ? 'down' : 'info', trendClass: delayedActions > 0 ? 'down' : '' },
+        { icon: 'priority', color: 'cyan', label: 'اولویت بالا/بحرانی', value: highPriority, suffix: '', trend: `${total > 0 ? Math.round(highPriority/total*100) : 0}% از کل`, trendIcon: 'alert' },
+        { icon: 'target', color: 'indigo', label: 'توقفات غیربرنامه‌ای', value: unplannedStops.length, suffix: '', trend: `${total > 0 ? Math.round(unplannedStops.length/total*100) : 0}% از کل`, trendIcon: unplannedStops.length > total/2 ? 'down' : 'up' }
+    ];
+    
+    const icons = {
+        'clock': '<svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>',
+        'timer': '<svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.962 8.962 0 0 0 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9a8.994 8.994 0 0 0 7.03-14.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>',
+        'loss': '<svg viewBox="0 0 24 24"><path d="M16 6l-4 4-4-4H4v14h16V6h-4zm2 12H6V8h2.83l3.17 3.17L15.17 8H18v10z"/></svg>',
+        'avg': '<svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>',
+        'check': '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
+        'warning': '<svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>',
+        'priority': '<svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>',
+        'target': '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>'
+    };
+    
+    const trendIcons = {
+        'up': '<svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg>',
+        'down': '<svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>',
+        'info': '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>',
+        'calendar': '<svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>',
+        'alert': '<svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>'
+    };
+    
+    const grid = document.getElementById('kpiHeroGrid');
+    grid.innerHTML = kpis.map((k, idx) => `
+        <div class="kpi-hero-card" data-color="${k.color}">
+            <div class="kpi-bg-glow"></div>
+            <div class="kpi-hero-header">
+                <div class="kpi-hero-label">${k.label}</div>
+                <div class="kpi-hero-icon c-${k.color}">${icons[k.icon]}</div>
+            </div>
+            <div class="kpi-hero-value" data-target="${k.value}" data-suffix="${k.suffix}">۰${k.suffix}</div>
+            <div class="kpi-hero-trend ${k.trendClass || ''}">
+                ${trendIcons[k.trendIcon] || trendIcons.info}
+                <span>${k.trend}</span>
+            </div>
+        </div>
+    `).join('');
+    
+    setTimeout(() => {
+        grid.querySelectorAll('.kpi-hero-value').forEach((el, idx) => {
+            const target = parseFloat(el.dataset.target);
+            const suffix = el.dataset.suffix || '';
+            setTimeout(() => {
+                animateValue(el, 0, target, 1500, suffix);
+            }, idx * 100);
+        });
+    }, 100);
+}
+
+/* =========================================================
+   نمودارها
+========================================================= */
+function getChartColors() {
+    const style = getComputedStyle(document.body);
+    return {
+        text: style.getPropertyValue('--text-primary').trim(),
+        textSecondary: style.getPropertyValue('--text-secondary').trim(),
+        border: style.getPropertyValue('--border-color').trim(),
+        bg: style.getPropertyValue('--bg-card').trim()
+    };
+}
+
+function renderAllCharts() {
+    Object.values(charts).forEach(c => c && c.destroy && c.destroy());
+    charts = {};
+    renderTrendChart();
+    renderCumulativeChart();
+    renderTypeChart();
+    renderCauseChart();
+    renderLossChart();
+    renderStatusChart();
+    renderResponsibleChart();
+}
+
+document.querySelectorAll('.time-selector').forEach(sel => {
+    sel.querySelectorAll('.time-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const chartId = sel.dataset.chart;
+            const range = btn.dataset.range;
+            sel.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            chartTimeRanges[chartId] = range;
+            renderChartById(chartId);
+        });
+    });
+});
+
+function renderChartById(chartId) {
+    if (charts[chartId]) { charts[chartId].destroy(); delete charts[chartId]; }
+    switch(chartId) {
+        case 'trendChart': renderTrendChart(); break;
+        case 'cumulativeChart': renderCumulativeChart(); break;
+        case 'typeChart': renderTypeChart(); break;
+        case 'causeChart': renderCauseChart(); break;
+        case 'lossChart': renderLossChart(); break;
+    }
+}
+
+function getTimeKey(d, range) {
+    if (!d.startDate) return null;
+    if (range === 'day') return `${d.startDate.y}/${String(d.startDate.m).padStart(2,'0')}/${String(d.startDate.d).padStart(2,'0')}`;
+    if (range === 'month') return `${d.startDate.y}/${String(d.startDate.m).padStart(2,'0')}`;
+    return `${d.startDate.y}`;
+}
+
+function renderTrendChart() {
+    const canvas = document.getElementById('trendChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const colors = getChartColors();
+    const range = chartTimeRanges.trendChart;
+    
+    const data = {};
+    filteredData.forEach(d => {
+        const key = getTimeKey(d, range);
+        if (!key) return;
+        if (!data[key]) data[key] = { hours: 0, count: 0 };
+        data[key].hours += d.durationHours;
+        data[key].count += 1;
+    });
+    
+    const sortedKeys = Object.keys(data).sort();
+    
+    charts.trendChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: sortedKeys,
+            datasets: [
+                {
+                    label: 'مدت توقف (ساعت)',
+                    data: sortedKeys.map(k => Math.round(data[k].hours * 10) / 10),
+                    borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                    tension: 0.4, fill: true, yAxisID: 'y', pointRadius: 4, pointHoverRadius: 6
+                },
+                {
+                    label: 'تعداد توقفات',
+                    data: sortedKeys.map(k => data[k].count),
+                    borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    tension: 0.4, yAxisID: 'y1', pointRadius: 4, pointHoverRadius: 6
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { labels: { color: colors.text, font: { family: 'Vazirmatn' } } },
+                tooltip: { backgroundColor: colors.bg, titleColor: colors.text, bodyColor: colors.text, borderColor: colors.border, borderWidth: 1, rtl: true, textDirection: 'rtl' }
+            },
+            scales: {
+                x: { ticks: { color: colors.textSecondary, font: { family: 'Vazirmatn' } }, grid: { color: colors.border } },
+                y: { type: 'linear', position: 'right', title: { display: true, text: 'ساعت', color: colors.textSecondary }, ticks: { color: colors.textSecondary }, grid: { color: colors.border } },
+                y1: { type: 'linear', position: 'left', title: { display: true, text: 'تعداد', color: colors.textSecondary }, ticks: { color: colors.textSecondary }, grid: { display: false } }
+            }
+        }
+    });
+}
+
+function renderCumulativeChart() {
+    const canvas = document.getElementById('cumulativeChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const colors = getChartColors();
+    const range = chartTimeRanges.cumulativeChart;
+    
+    const data = {};
+    filteredData.forEach(d => {
+        const key = getTimeKey(d, range);
+        if (!key) return;
+        if (!data[key]) data[key] = { hours: 0, loss: 0 };
+        data[key].hours += d.durationHours;
+        data[key].loss += d.lostProduction;
+    });
+    
+    const sortedKeys = Object.keys(data).sort();
+    let cumHours = 0, cumLoss = 0;
+    const cumHoursArr = [], cumLossArr = [];
+    sortedKeys.forEach(k => {
+        cumHours += data[k].hours;
+        cumLoss += data[k].loss;
+        cumHoursArr.push(Math.round(cumHours * 10) / 10);
+        cumLossArr.push(Math.round(cumLoss));
+    });
+    
+    charts.cumulativeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: sortedKeys,
+            datasets: [
+                {
+                    label: 'تجمعی ساعت توقف',
+                    data: cumHoursArr,
+                    borderColor: '#14b8a6', backgroundColor: 'rgba(20, 184, 166, 0.2)',
+                    tension: 0.4, fill: true, yAxisID: 'y', pointRadius: 4, pointHoverRadius: 6, borderWidth: 2.5
+                },
+                {
+                    label: 'تجمعی تولید از دست‌رفته',
+                    data: cumLossArr,
+                    borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    tension: 0.4, fill: false, yAxisID: 'y1', pointRadius: 4, pointHoverRadius: 6, borderWidth: 2.5, borderDash: [5, 3]
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { labels: { color: colors.text, font: { family: 'Vazirmatn' } } },
+                tooltip: { backgroundColor: colors.bg, titleColor: colors.text, bodyColor: colors.text, borderColor: colors.border, borderWidth: 1, rtl: true, textDirection: 'rtl' }
+            },
+            scales: {
+                x: { ticks: { color: colors.textSecondary, font: { family: 'Vazirmatn' } }, grid: { color: colors.border } },
+                y: { type: 'linear', position: 'right', title: { display: true, text: 'ساعت', color: '#14b8a6' }, ticks: { color: '#14b8a6' }, grid: { color: colors.border } },
+                y1: { type: 'linear', position: 'left', title: { display: true, text: 'تولید', color: '#f59e0b' }, ticks: { color: '#f59e0b' }, grid: { display: false } }
+            }
+        }
+    });
+}
+
+function renderTypeChart() {
+    const canvas = document.getElementById('typeChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const colors = getChartColors();
+    
+    const data = {};
+    filteredData.forEach(d => {
+        const type = d.stopType || 'نامشخص';
+        data[type] = (data[type] || 0) + 1;
+    });
+    
+    const labels = Object.keys(data);
+    const values = Object.values(data);
+    const palette = ['#3b82f6','#ef4444','#f59e0b','#10b981','#8b5cf6','#ec4899','#06b6d4','#f97316'];
+    
+    charts.typeChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels,
+            datasets: [{ data: values, backgroundColor: palette.slice(0, labels.length), borderWidth: 2, borderColor: colors.bg }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: colors.text, font: { family: 'Vazirmatn', size: 11 }, padding: 10 } },
+                tooltip: { rtl: true, textDirection: 'rtl', backgroundColor: colors.bg, titleColor: colors.text, bodyColor: colors.text, borderColor: colors.border, borderWidth: 1 }
+            }
+        }
+    });
+}
+
+function renderCauseChart() {
+    const canvas = document.getElementById('causeChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const colors = getChartColors();
+    
+    const data = {};
+    filteredData.forEach(d => {
+        const cause = d.causeCategory || 'نامشخص';
+        data[cause] = (data[cause] || 0) + 1;
+    });
+    
+    const sorted = Object.entries(data).sort((a,b) => b[1] - a[1]).slice(0, 10);
+    
+    charts.causeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: sorted.map(s => s[0]),
+            datasets: [{ label: 'تعداد توقفات', data: sorted.map(s => s[1]), backgroundColor: 'rgba(245, 158, 11, 0.7)', borderColor: '#f59e0b', borderWidth: 1, borderRadius: 6 }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+            plugins: { legend: { display: false }, tooltip: { rtl: true, textDirection: 'rtl', backgroundColor: colors.bg, titleColor: colors.text, bodyColor: colors.text } },
+            scales: {
+                x: { ticks: { color: colors.textSecondary }, grid: { color: colors.border } },
+                y: { ticks: { color: colors.text, font: { family: 'Vazirmatn', size: 10 } }, grid: { display: false } }
+            }
+        }
+    });
+}
+
+function renderLossChart() {
+    const canvas = document.getElementById('lossChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const colors = getChartColors();
+    
+    const data = {};
+    filteredData.forEach(d => {
+        const unit = d.unit || 'نامشخص';
+        data[unit] = (data[unit] || 0) + d.lostProduction;
+    });
+    
+    const sorted = Object.entries(data).sort((a,b) => b[1] - a[1]).slice(0, 10);
+    
+    charts.lossChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: sorted.map(s => s[0]),
+            datasets: [{ label: 'تولید از دست‌رفته', data: sorted.map(s => Math.round(s[1])), backgroundColor: 'rgba(139, 92, 246, 0.7)', borderColor: '#8b5cf6', borderWidth: 1, borderRadius: 6 }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { rtl: true, textDirection: 'rtl', backgroundColor: colors.bg, titleColor: colors.text, bodyColor: colors.text } },
+            scales: {
+                x: { ticks: { color: colors.text, font: { family: 'Vazirmatn', size: 10 } }, grid: { display: false } },
+                y: { ticks: { color: colors.textSecondary }, grid: { color: colors.border } }
+            }
+        }
+    });
+}
+
+function renderStatusChart() {
+    const canvas = document.getElementById('statusChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const colors = getChartColors();
+    
+    const data = {};
+    filteredData.forEach(d => {
+        const key = d.actionStatus || 'نامشخص';
+        data[key] = (data[key] || 0) + 1;
+    });
+    
+    const labels = Object.keys(data);
+    const values = Object.values(data);
+    const palette = ['#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6','#ec4899'];
+    
+    charts.statusChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels,
+            datasets: [{ data: values, backgroundColor: palette.slice(0, labels.length), borderWidth: 2, borderColor: colors.bg }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: colors.text, font: { family: 'Vazirmatn', size: 11 }, padding: 10 } },
+                tooltip: { rtl: true, textDirection: 'rtl', backgroundColor: colors.bg, titleColor: colors.text, bodyColor: colors.text }
+            }
+        }
+    });
+}
+
+function renderResponsibleChart() {
+    const canvas = document.getElementById('responsibleChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const colors = getChartColors();
+    
+    const data = {};
+    filteredData.forEach(d => {
+        const key = d.responsible || 'نامشخص';
+        data[key] = (data[key] || 0) + 1;
+    });
+    
+    const sorted = Object.entries(data).sort((a,b) => b[1] - a[1]).slice(0, 8);
+    
+    charts.responsibleChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: sorted.map(s => s[0]),
+            datasets: [{ label: 'تعداد توقفات', data: sorted.map(s => s[1]), backgroundColor: 'rgba(6, 182, 212, 0.7)', borderColor: '#06b6d4', borderWidth: 1, borderRadius: 6 }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { rtl: true, textDirection: 'rtl', backgroundColor: colors.bg, titleColor: colors.text, bodyColor: colors.text } },
+            scales: {
+                x: { ticks: { color: colors.text, font: { family: 'Vazirmatn', size: 10 } }, grid: { display: false } },
+                y: { ticks: { color: colors.textSecondary }, grid: { color: colors.border } }
+            }
+        }
+    });
+}
+
+/* =========================================================
+   Modal تمام‌صفحه
+========================================================= */
+function openChartFullscreen(chartId, title) {
+    const sourceChart = charts[chartId];
+    if (!sourceChart) {
+        showToast('نمودار در دسترس نیست');
+        return;
+    }
+    
+    const modal = document.getElementById('chartModal');
+    document.getElementById('chartModalTitle').textContent = title;
+    modal.classList.add('active');
+    
+    setTimeout(() => {
+        const canvas = document.getElementById('chartModalCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        
+        if (fullscreenChart) {
+            fullscreenChart.destroy();
+            fullscreenChart = null;
+        }
+        
+        const clonedData = JSON.parse(JSON.stringify(sourceChart.data));
+        const clonedOptions = JSON.parse(JSON.stringify(sourceChart.options));
+        
+        clonedOptions.responsive = true;
+        clonedOptions.maintainAspectRatio = false;
+        if (clonedOptions.plugins && clonedOptions.plugins.legend && clonedOptions.plugins.legend.labels) {
+            clonedOptions.plugins.legend.labels.font = { family: 'Vazirmatn', size: 14 };
+        }
+        
+        try {
+            fullscreenChart = new Chart(ctx, {
+                type: sourceChart.config.type,
+                data: clonedData,
+                options: clonedOptions
+            });
+        } catch(e) {
+            console.error('Error:', e);
+            showToast('خطا در نمایش نمودار');
+        }
+    }, 150);
+}
+
+function closeChartModal() {
+    document.getElementById('chartModal').classList.remove('active');
+    if (fullscreenChart) {
+        fullscreenChart.destroy();
+        fullscreenChart = null;
+    }
+}
+
+document.getElementById('chartModal').addEventListener('click', (e) => {
+    if (e.target.id === 'chartModal') closeChartModal();
+});
+
+/* =========================================================
+   گانت چارت حرفه‌ای
+========================================================= */
+function renderGantt() {
+    const tbody = document.getElementById('ganttTableBody');
+    const summaryEl = document.getElementById('ganttSummaryModern');
+    const totalHoursEl = document.getElementById('ganttTotalHours');
+    const totalLossEl = document.getElementById('ganttTotalLoss');
+    
+    // فیلتر داده‌های دارای تاریخ
+    const withDate = filteredData.filter(d => d.startTimestamp > 0);
+    const sorted = [...withDate].sort((a, b) => a.startTimestamp - b.startTimestamp);
+    
+    if (sorted.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" class="empty-state">داده‌ای برای نمایش وجود ندارد</td></tr>';
+        summaryEl.innerHTML = '';
+        return;
+    }
+    
+    // محاسبه مقادیر کل
+    const totalHours = sorted.reduce((s, d) => s + d.durationHours, 0);
+    const totalLoss = sorted.reduce((s, d) => s + d.lostProduction, 0);
+    
+    totalHoursEl.textContent = formatNumber(Math.round(totalHours * 10) / 10);
+    totalLossEl.textContent = formatNumber(Math.round(totalLoss));
+    
+    // محاسبه بازه زمانی
+    const minTs = sorted[0].startTimestamp;
+    const maxEndTs = Math.max(...sorted.map(d => {
+        const endByDuration = d.startTimestamp + (d.durationHours * 3600000);
+        const endByDate = d.endTimestamp || d.startTimestamp;
+        return Math.max(endByDuration, endByDate);
+    }));
+    
+    const rangeMs = maxEndTs - minTs;
+    const totalRange = rangeMs || 86400000; // حداقل یک روز
+    
+    // ایجاد مقیاس زمانی
+    updateTimeScale(minTs, maxEndTs);
+    
+    // ساخت ردیف‌ها
+    let html = '';
+    sorted.forEach((d, idx) => {
+        // محاسبه موقعیت و عرض
+        const leftPercent = ((d.startTimestamp - minTs) / totalRange) * 100;
+        const durationMs = d.durationHours * 3600000;
+        const widthPercent = Math.max((durationMs / totalRange) * 100, 5);
+        
+        // تعیین واحد و نوع توقف
+        const unitName = d.unit || 'نامشخص';
+        const stopType = d.stopType || 'عمومی';
+        
+        html += `
+            <tr onclick="showDetail(${rawData.indexOf(d)})" style="cursor: pointer;">
+                <td>
+                    <div class="date-cells">
+                        <div class="date-cell" title="شروع">
+                            ${d.startDateStr || '-'}
+                        </div>
+                        <div class="date-cell" title="پایان">
+                            ${d.endDateStr || '-'}
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="chart-cell">
+                        <div class="chart-bars">
+                            <div class="gantt-bar-modern bar-green" 
+                                 style="left: ${leftPercent}%; width: ${Math.min(widthPercent, 40)}%;"
+                                 title="${unitName} - ${stopType}">
+                                <div class="bar-chip">
+                                    <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                                    <span>${formatNumber(Math.round(d.durationHours * 10) / 10)} ساعت</span>
+                                </div>
+                            </div>
+                            <div class="gantt-bar-modern bar-purple" 
+                                 style="left: ${leftPercent}%; width: ${Math.min(widthPercent, 40)}%; margin-top: 8px;"
+                                 title="${unitName} - ${stopType}">
+                                <div class="bar-chip">
+                                    <svg viewBox="0 0 24 24"><path d="M16 6l-4 4-4-4H4v14h16V6h-4zm2 12H6V8h2.83l3.17 3.17L15.17 8H18v10z"/></svg>
+                                    <span>${formatNumber(Math.round(d.lostProduction))} مق</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tbody.innerHTML = html;
+    
+    // Summary Cards
+    const avgDuration = sorted.length > 0 ? totalHours / sorted.length : 0;
+    const daysCount = Math.max(1, Math.ceil(rangeMs / 86400000));
+    const uniqueUnits = new Set(sorted.map(d => d.unit).filter(Boolean)).size;
+    
+    summaryEl.innerHTML = `
+        <div class="summary-card">
+            <div class="summary-value">${formatNumber(sorted.length)}</div>
+            <div class="summary-label">تعداد کل توقفات</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">${formatNumber(Math.round(totalHours * 10) / 10)}</div>
+            <div class="summary-label">مجموع ساعت توقف</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">${formatNumber(Math.round(totalLoss))}</div>
+            <div class="summary-label">تولید از دست‌رفته (مق)</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">${formatNumber(Math.round(avgDuration * 10) / 10)}</div>
+            <div class="summary-label">میانگین مدت (ساعت)</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">${formatNumber(daysCount)}</div>
+            <div class="summary-label">روزهای بازه</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-value">${formatNumber(uniqueUnits)}</div>
+            <div class="summary-label">واحدهای درگیر</div>
+        </div>
+    `;
+}
+
+function updateTimeScale(minTs, maxTs) {
+    const scaleEl = document.getElementById('ganttTimeScale');
+    const range = maxTs - minTs;
+    const labels = [];
+    
+    for (let i = 0; i <= 4; i++) {
+        const ts = minTs + (range * i / 4);
+        const date = new Date(ts);
+        const j = gregorianToJalali(date.getFullYear(), date.getMonth() + 1, date.getDate());
+        labels.push(`${j[1]}/${j[2]}`);
+    }
+    
+    scaleEl.innerHTML = labels.map(l => `<span>${l}</span>`).join('');
+}
+
+function exportGanttToExcel() {
+    const withDate = filteredData.filter(d => d.startTimestamp > 0);
+    const exportData = withDate.map(d => ({
+        'کد توقف': d.stopCode,
+        'واحد': d.unit,
+        'تاریخ شروع': d.startDateStr,
+        'تاریخ پایان': d.endDateStr,
+        'مدت توقف (ساعت)': Math.round(d.durationHours * 10) / 10,
+        'تولید از دست‌رفته': Math.round(d.lostProduction),
+        'نوع توقف': d.stopType,
+        'دسته علت': d.causeCategory
+    }));
+    
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'گانت چارت');
+    XLSX.writeFile(wb, `گانت-توقفات-${new Date().toISOString().slice(0,10)}.xlsx`);
+    showToast('فایل اکسل با موفقیت ایجاد شد');
+}
+
+function refreshGantt() {
+    renderGantt();
+    showToast('نمودار به‌روزرسانی شد');
+}
+
+/* =========================================================
+   جدول
+========================================================= */
+const TABLE_COLUMNS = [
+    { key: 'rowIndex', label: 'ردیف', filterable: false },
+    { key: 'stopCode', label: 'کد توقف', filterable: true },
+    { key: 'unit', label: 'واحد', filterable: true },
+    { key: 'startDateStr', label: 'تاریخ شروع', filterable: true },
+    { key: 'durationHours', label: 'مدت (ساعت)', filterable: false, format: v => formatNumber(Math.round(v*10)/10) },
+    { key: 'stopType', label: 'نوع توقف', filterable: true },
+    { key: 'causeCategory', label: 'دسته علت', filterable: true },
+    { key: 'causeDesc', label: 'شرح علت', filterable: false },
+    { key: 'lostProduction', label: 'تولید از دست‌رفته', filterable: false, format: v => formatNumber(Math.round(v)) },
+    { key: 'priority', label: 'اولویت', filterable: true, format: renderPriority },
+    { key: 'actionStatus', label: 'وضعیت', filterable: true, format: renderStatus },
+    { key: 'responsible', label: 'مسئول پیگیری', filterable: true }
+];
+
+function renderTable() {
+    const header = document.getElementById('tableHeader');
+    header.innerHTML = TABLE_COLUMNS.map(c => {
+        let filterHtml = '';
+        if (c.filterable) {
+            filterHtml = `<span class="filter-icon ${columnFilters[c.key] && columnFilters[c.key].size > 0 ? 'active' : ''}" onclick="event.stopPropagation(); toggleColumnFilter('${c.key}', this)">
+                <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+            </span>`;
+        }
+        return `<th class="${c.filterable ? 'filterable' : ''}" style="position:relative;">${c.label}${filterHtml}</th>`;
+    }).join('');
+    
+    applyTableFilters();
+}
+
+function applyTableFilters() {
+    tableFilteredData = filteredData.filter(d => {
+        for (const [key, selectedValues] of Object.entries(columnFilters)) {
+            if (!selectedValues || selectedValues.size === 0) continue;
+            const val = String(d[key] || '');
+            if (!selectedValues.has(val)) return false;
+        }
+        return true;
+    });
+    
+    const sorted = [...tableFilteredData].sort((a, b) => (b.startTimestamp || 0) - (a.startTimestamp || 0));
+    
+    document.getElementById('tableCount').textContent = `(${formatNumber(sorted.length)} رکورد)`;
+    
+    const body = document.getElementById('tableBody');
+    if (sorted.length === 0) {
+        body.innerHTML = `<tr><td colspan="${TABLE_COLUMNS.length}" class="empty-state">داده‌ای برای نمایش وجود ندارد</td></tr>`;
+        return;
+    }
+    
+    body.innerHTML = sorted.slice(0, 300).map(d => {
+        return `<tr onclick="showDetail(${rawData.indexOf(d)})">` + 
+            TABLE_COLUMNS.map(c => {
+                let val = d[c.key];
+                if (c.format) val = c.format(val);
+                else if (val === null || val === undefined) val = '';
+                else val = String(val);
+                return `<td>${val}</td>`;
+            }).join('') + '</tr>';
+    }).join('');
+    
+    if (sorted.length > 300) {
+        body.innerHTML += `<tr><td colspan="${TABLE_COLUMNS.length}" style="text-align:center; padding:0.75rem; color:var(--text-secondary);">
+            ... و ${formatNumber(sorted.length - 300)} رکورد دیگر
+        </td></tr>`;
+    }
+}
+
+function toggleColumnFilter(key, iconEl) {
+    document.querySelectorAll('.column-filter-dropdown.show').forEach(d => {
+        if (!d.contains(iconEl)) d.classList.remove('show');
+    });
+    
+    let dropdown = iconEl.parentElement.querySelector('.column-filter-dropdown');
+    if (!dropdown) {
+        dropdown = document.createElement('div');
+        dropdown.className = 'column-filter-dropdown';
+        iconEl.parentElement.appendChild(dropdown);
+        
+        const values = [...new Set(filteredData.map(d => String(d[key] || '')).filter(Boolean))].sort();
+        const currentSelected = columnFilters[key] || new Set();
+        
+        let html = `<input type="text" class="cf-search" placeholder="جستجو..." oninput="filterColumnOptions(this)">`;
+        values.forEach(v => {
+            const checked = currentSelected.size === 0 || currentSelected.has(v) ? 'checked' : '';
+            html += `<label class="cf-option"><input type="checkbox" value="${v.replace(/"/g, '&quot;')}" ${checked} onchange="updateColumnFilter('${key}')"> <span>${v}</span></label>`;
+        });
+        html += `<div class="cf-actions">
+            <button class="cf-btn" onclick="selectAllColumnFilter('${key}')">انتخاب همه</button>
+            <button class="cf-btn" onclick="clearColumnFilter('${key}')">پاک‌کردن</button>
+        </div>`;
+        dropdown.innerHTML = html;
+    }
+    
+    dropdown.classList.toggle('show');
+}
+
+function filterColumnOptions(input) {
+    const query = input.value.toLowerCase();
+    const dropdown = input.parentElement;
+    dropdown.querySelectorAll('.cf-option').forEach(opt => {
+        const text = opt.querySelector('span').textContent.toLowerCase();
+        opt.style.display = text.includes(query) ? '' : 'none';
+    });
+}
+
+function updateColumnFilter(key) {
+    const dropdown = document.querySelector(`th .filter-icon[onclick*="'${key}'"]`)?.parentElement.querySelector('.column-filter-dropdown');
+    if (!dropdown) return;
+    
+    const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+    const selected = new Set();
+    let allChecked = true;
+    checkboxes.forEach(cb => {
+        if (cb.checked) selected.add(cb.value);
+        else allChecked = false;
+    });
+    
+    if (allChecked || selected.size === checkboxes.length) {
+        columnFilters[key] = new Set();
+    } else {
+        columnFilters[key] = selected;
+    }
+    
+    const icon = dropdown.parentElement.querySelector('.filter-icon');
+    if (icon) {
+        icon.classList.toggle('active', columnFilters[key] && columnFilters[key].size > 0);
+    }
+    
+    applyTableFilters();
+}
+
+function selectAllColumnFilter(key) {
+    const dropdown = document.querySelector(`th .filter-icon[onclick*="'${key}'"]`)?.parentElement.querySelector('.column-filter-dropdown');
+    if (!dropdown) return;
+    dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+    columnFilters[key] = new Set();
+    const icon = dropdown.parentElement.querySelector('.filter-icon');
+    if (icon) icon.classList.remove('active');
+    applyTableFilters();
+}
+
+function clearColumnFilter(key) {
+    const dropdown = document.querySelector(`th .filter-icon[onclick*="'${key}'"]`)?.parentElement.querySelector('.column-filter-dropdown');
+    if (!dropdown) return;
+    dropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    columnFilters[key] = new Set();
+    const icon = dropdown.parentElement.querySelector('.filter-icon');
+    if (icon) icon.classList.remove('active');
+    applyTableFilters();
+}
+
+function clearTableFilters() {
+    columnFilters = {};
+    document.querySelectorAll('.filter-icon.active').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.column-filter-dropdown').forEach(d => d.remove());
+    applyTableFilters();
+    showToast('فیلترهای جدول پاک شدند');
+}
+
+function renderPriority(val) {
+    if (!val) return '';
+    const v = val.toLowerCase();
+    let cls = 'priority-low';
+    if (v.includes('بالا') || v.includes('بحران') || v.includes('high') || v.includes('critical')) cls = 'priority-high';
+    else if (v.includes('متوسط') || v.includes('medium')) cls = 'priority-medium';
+    return `<span class="priority-badge ${cls}">${val}</span>`;
+}
+
+function renderStatus(val) {
+    if (!val) return '';
+    const v = val.toLowerCase();
+    let cls = 'status-pending';
+    if (v.includes('انجام') || v.includes('تکمیل') || v.includes('بسته') || v.includes('done')) cls = 'status-done';
+    else if (v.includes('در حال') || v.includes('progress')) cls = 'status-progress';
+    else if (v.includes('عقب') || v.includes('تاخیر') || v.includes('delay')) cls = 'status-delayed';
+    return `<span class="status-badge ${cls}">${val}</span>`;
+}
+
+/* =========================================================
+   گزارش
+========================================================= */
+function renderReport() {
+    const total = filteredData.length;
+    const totalHours = filteredData.reduce((s, d) => s + d.durationHours, 0);
+    const totalLoss = filteredData.reduce((s, d) => s + d.lostProduction, 0);
+    const avgMTTR = total > 0 ? totalHours / total : 0;
+    
+    const unitLoss = {};
+    filteredData.forEach(d => {
+        const u = d.unit || 'نامشخص';
+        unitLoss[u] = (unitLoss[u] || 0) + d.lostProduction;
+    });
+    const worstUnits = Object.entries(unitLoss).sort((a,b) => b[1] - a[1]).slice(0, 3);
+    
+    const causeCount = {};
+    filteredData.forEach(d => {
+        const c = d.causeCategory || 'نامشخص';
+        causeCount[c] = (causeCount[c] || 0) + 1;
+    });
+    const topCauses = Object.entries(causeCount).sort((a,b) => b[1] - a[1]).slice(0, 3);
+    
+    const delayedActions = filteredData.filter(d => d.actionStatus && 
+        (d.actionStatus.includes('عقب') || d.actionStatus.includes('تاخیر')));
+    const highPriority = filteredData.filter(d => d.priority && 
+        (d.priority.includes('بالا') || d.priority.includes('بحرانی')));
+    
+    let html = `
+        <div class="report-item">
+            <strong>📊 خلاصه عملکرد:</strong> در دوره مورد بررسی، مجموعاً ${formatNumber(total)} مورد توقف به ثبت رسیده که جمعاً ${formatNumber(Math.round(totalHours))} ساعت (معادل ${formatNumber(Math.round(totalHours/24))} روز) زمان توقف و ${formatNumber(Math.round(totalLoss))} واحد تولید از دست‌رفته را به همراه داشته است. میانگین زمان تعمیرات (MTTR) برابر ${formatNumber(Math.round(avgMTTR*10)/10)} ساعت می‌باشد.
+        </div>
+        <div class="report-item">
+            <strong> واحدهای با بیشترین خسارت:</strong>
+            ${worstUnits.map((u, i) => `<br>${i+1}. واحد ${u[0]}: ${formatNumber(Math.round(u[1]))} واحد تولید از دست‌رفته`).join('')}
+        </div>
+        <div class="report-item">
+            <strong>🔍 شایع‌ترین علل توقف:</strong>
+            ${topCauses.map((c, i) => `<br>${i+1}. ${c[0]}: ${formatNumber(c[1])} مورد (${total > 0 ? Math.round(c[1]/total*100) : 0}%)`).join('')}
+        </div>
+        <div class="report-item">
+            <strong>⚠️ اقدامات معوق و بحرانی:</strong>
+            <br>• تعداد ${formatNumber(highPriority.length)} توقف با اولویت بالا/بحرانی
+            <br>• تعداد ${formatNumber(delayedActions.length)} اقدام اصلاحی عقب‌افتاده
+            ${delayedActions.length > 0 ? `<br>• پیشنهاد: برگزاری جلسه فوری برای پیگیری اقدامات معوق` : ''}
+        </div>
+        <div class="report-item">
+            <strong>💡 پیشنهادات بهبود:</strong>
+            <br>• تمرکز بر کاهش توقفات واحد ${worstUnits[0] ? worstUnits[0][0] : '...'} به عنوان پرتکرارترین واحد
+            <br>• تحلیل ریشه‌ای علل دسته "${topCauses[0] ? topCauses[0][0] : '...'}" و تعریف اقدامات پیشگیرانه
+            <br>• بازنگری در برنامه PM برای کاهش توقفات برنامه‌ریزی‌نشده
+        </div>
+    `;
+    
+    document.getElementById('reportContent').innerHTML = html;
+}
+
+/* =========================================================
+   مودال جزئیات
+========================================================= */
+function showDetail(idx) {
+    const d = rawData[idx];
+    if (!d) return;
+    
+    document.getElementById('modalTitle').textContent = `جزئیات توقف - ${d.stopCode || d.rowIndex}`;
+    
+    const fields = [
+        ['کد توقف', d.stopCode], ['شرکت', d.company], ['واحد', d.unit], ['محصول', d.product],
+        ['تاریخ شروع', d.startDateStr], ['ساعت شروع', d.startTime],
+        ['تاریخ پایان', d.endDateStr], ['ساعت پایان', d.endTime],
+        ['مدت توقف (ساعت)', formatNumber(d.durationHours)],
+        ['مدت توقف (روز)', formatNumber(Math.round(d.durationDays*100)/100)],
+        ['نوع توقف', d.stopType], ['دسته علت', d.causeCategory],
+        ['شرح علت', d.causeDesc], ['ریشه مشکل', d.rootCause],
+        ['اثر بر تولید', d.productionEffect],
+        ['ظرفیت طراحی ساعتی', formatNumber(d.designRate)],
+        ['تولید از دست‌رفته', formatNumber(Math.round(d.lostProduction))],
+        ['مسئول پیگیری', d.responsible],
+        ['اقدام اصلاحی/پیشگیرانه', d.correctiveAction],
+        ['مهلت اقدام', d.deadlineStr], ['وضعیت اقدام', d.actionStatus],
+        ['اولویت', d.priority], ['توضیحات', d.notes]
+    ];
+    
+    document.getElementById('modalBody').innerHTML = fields.map(f => `
+        <div style="padding:0.45rem 0; border-bottom:1px solid var(--border-color);">
+            <div style="font-size:0.72rem; color:var(--text-secondary); margin-bottom:0.1rem;">${f[0]}</div>
+            <div style="font-size:0.88rem; color:var(--text-primary);">${f[1] || '—'}</div>
+        </div>
+    `).join('');
+    
+    document.getElementById('detailModal').classList.add('active');
+}
+
+function closeModal() { document.getElementById('detailModal').classList.remove('active'); }
+document.getElementById('detailModal').addEventListener('click', (e) => {
+    if (e.target.id === 'detailModal') closeModal();
+});
+
+/* =========================================================
+   صادرات
+========================================================= */
+function exportChart(chartId) {
+    const canvas = document.getElementById(chartId);
+    if (!canvas) return;
+    const link = document.createElement('a');
+    link.download = `${chartId}-${new Date().toISOString().slice(0,10)}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('نمودار صادر شد');
+}
+
+function exportTableToExcel() {
+    const table = document.getElementById('dataTable');
+    const wb = XLSX.utils.table_to_book(table, { sheet: 'توقفات' });
+    XLSX.writeFile(wb, `گزارش-توقفات-${new Date().toISOString().slice(0,10)}.xlsx`);
+    showToast('فایل اکسل ایجاد شد');
+}
+
+function exportReport() {
+    const reportContent = document.getElementById('reportContent').innerHTML;
+    const printWin = window.open('', '', 'width=900,height=700');
+    printWin.document.write(`
+        <html dir="rtl"><head><title>گزارش مدیریتی</title>
+        <style>
+            body { font-family: Tahoma; padding: 30px; line-height: 1.8; }
+            h1 { color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px; }
+            .report-item { background: #f5f7fa; padding: 15px; margin: 10px 0; border-right: 4px solid #2563eb; border-radius: 4px; }
+            strong { color: #1a2332; }
+        </style></head><body>
+        <h1> گزارش مدیریتی توقفات</h1>
+        <h3>مجتمع پتروشیمی ارغوان گستر ایلام</h3>
+        <p>تاریخ تهیه گزارش: ${new Date().toLocaleDateString('fa-IR')}</p>
+        ${reportContent}
+        </body></html>
+    `);
+    printWin.document.close();
+    printWin.print();
+}
+
+/* =========================================================
+   Utilities
+========================================================= */
+function showLoading() { document.getElementById('loadingOverlay').classList.add('active'); }
+function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+/* =========================================================
+   داده‌های نمونه
+========================================================= */
+function loadSampleData() {
+    const units = ['الفین', 'اوره-آمونیاک', 'پلی‌اتیلن', 'آروماتیک', 'PVC', 'متانول'];
+    const types = ['برنامه‌ریزی شده', 'برنامه‌ریزی نشده', 'اضطراری', 'نت پیشگیرانه'];
+    const causes = ['مکانیکی', 'الکتریکی', 'ابزار دقیق', 'فرآیندی', 'عملیاتی', 'تاسیسات'];
+    const priorities = ['بالا', 'متوسط', 'پایین', 'بحرانی'];
+    const statuses = ['انجام شده', 'در حال انجام', 'در انتظار', 'عقب‌افتاده'];
+    const responsibles = ['مهندس احمدی', 'مهندس محمدی', 'مهندس رضایی', 'مهندس کریمی', 'مهندس حسینی'];
+    
+    const sampleData = [];
+    for (let i = 1; i <= 70; i++) {
+        const startMonth = Math.floor(Math.random() * 12) + 1;
+        const startDay = Math.floor(Math.random() * 28) + 1;
+        const duration = Math.round((Math.random() * 72 + 2) * 10) / 10;
+        const endDay = Math.min(startDay + Math.ceil(duration / 24), 29);
+        
+        sampleData.push({
+            'ردیف': i,
+            'کد توقف': 'ST-' + String(i).padStart(4, '0'),
+            'شرکت': 'ارغوان گستر',
+            'واحد': units[Math.floor(Math.random() * units.length)],
+            'محصول': 'محصول ' + (Math.floor(Math.random() * 5) + 1),
+            'تاریخ شروع (شمسی)': `1402/${String(startMonth).padStart(2,'0')}/${String(startDay).padStart(2,'0')}`,
+            'ساعت شروع': '08:00',
+            'تاریخ پایان (شمسی)': `1402/${String(startMonth).padStart(2,'0')}/${String(endDay).padStart(2,'0')}`,
+            'ساعت پایان': '17:00',
+            'مدت توقف (ساعت)': duration,
+            'مدت توقف (روز)': Math.round(duration / 24 * 100) / 100,
+            'نوع توقف': types[Math.floor(Math.random() * types.length)],
+            'دسته علت': causes[Math.floor(Math.random() * causes.length)],
+            'شرح علت توقف': 'خرابی تجهیز ' + (Math.floor(Math.random() * 100) + 1),
+            'ریشه مشکل': 'فرسودگی / عدم نگهداری مناسب',
+            'اثر بر تولید': 'کاهش تولید',
+            'ظرفیت/نرخ طراحی ساعتی': Math.floor(Math.random() * 50 + 10),
+            'تولید از دست‌رفته': Math.floor(duration * (Math.random() * 50 + 10)),
+            'مسئول پیگیری': responsibles[Math.floor(Math.random() * responsibles.length)],
+            'اقدام اصلاحی/پیشگیرانه': 'تعویض قطعه / بازنگری برنامه PM',
+            'مهلت اقدام (شمسی)': `1402/${String(Math.min(startMonth+1, 12)).padStart(2,'0')}/${String(startDay).padStart(2,'0')}`,
+            'وضعیت اقدام': statuses[Math.floor(Math.random() * statuses.length)],
+            'اولویت': priorities[Math.floor(Math.random() * priorities.length)],
+            'توضیحات': ''
+        });
+    }
+    
+    rawData = normalizeData(sampleData);
+    filteredData = [...rawData];
+    tableFilteredData = [...rawData];
+    document.getElementById('uploadSection').style.display = 'none';
+    document.getElementById('dashboardContent').classList.remove('hidden');
+    document.getElementById('mainToolbar').classList.remove('toolbar-hidden');
+    renderAll();
+    showToast('داده‌های نمونه بارگذاری شدند');
+}
+
+// برای تست: loadSampleData();
+</script>
+
+</body>
+</html>
