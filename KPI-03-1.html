@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داشبورد شاخص‌های KPI - مجتمع پتروشیمی ایلام</title>
+
+  <script src="libs/Vazirmatn-font-face.css"></script>
+  <script src="libs/apexcharts.min.js"></script>
+  <script src="libs/chart.umd.min.js"></script>
+  <script src="libs/xlsx.full.min.js"></script>
+
+  <link href="libs" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-main: 'Vazirmatn', 'Tahoma', sans-serif;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
+      --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.85);
+      --bg-card-hover: rgba(30, 41, 59, 0.95);
+      --bg-modal: #111827;
+      --bg-header: rgba(10, 14, 26, 0.92);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.3);
+      --accent2: #8b5cf6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: rgba(148, 163, 184, 0.12);
+      --glass-bg: rgba(17, 24, 39, 0.7);
+      --glass-border: rgba(148, 163, 184, 0.15);
+      --table-stripe: rgba(30, 41, 59, 0.5);
+      --chart-grid: rgba(148, 163, 184, 0.1);
+      --scrollbar-track: #1e293b;
+      --scrollbar-thumb: #475569;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f0f4f8;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.9);
+      --bg-card-hover: rgba(255, 255, 255, 1);
+      --bg-modal: #ffffff;
+      --bg-header: rgba(255, 255, 255, 0.95);
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --accent: #2563eb;
+      --accent-glow: rgba(37, 99, 235, 0.15);
+      --accent2: #7c3aed;
+      --success: #059669;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --border: rgba(0, 0, 0, 0.08);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(0, 0, 0, 0.08);
+      --table-stripe: rgba(241, 245, 249, 0.8);
+      --chart-grid: rgba(0, 0, 0, 0.06);
+      --scrollbar-track: #e2e8f0;
+      --scrollbar-thumb: #94a3b8;
+    }
+
+    [data-theme="combined"] {
+      --bg-primary: #f1f5f9;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.92);
+      --bg-card-hover: rgba(255, 255, 255, 1);
+      --bg-modal: #ffffff;
+      --bg-header: rgba(15, 23, 42, 0.97);
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.2);
+      --accent2: #8b5cf6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: rgba(0, 0, 0, 0.08);
+      --glass-bg: rgba(255, 255, 255, 0.8);
+      --glass-border: rgba(0, 0, 0, 0.06);
+      --table-stripe: rgba(241, 245, 249, 0.8);
+      --chart-grid: rgba(0, 0, 0, 0.06);
+      --scrollbar-track: #e2e8f0;
+      --scrollbar-thumb: #94a3b8;
+      --header-text: #f1f5f9;
+      --header-text-secondary: #94a3b8;
+    }
+
+    [data-theme="deepblue"] {
+      --bg-primary: #020617;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.88);
+      --bg-card-hover: rgba(30, 41, 59, 0.95);
+      --bg-modal: #0f172a;
+      --bg-header: rgba(2, 6, 23, 0.95);
+      --text-primary: #e2e8f0;
+      --text-secondary: #7dd3fc;
+      --text-muted: #38bdf8;
+      --accent: #0ea5e9;
+      --accent-glow: rgba(14, 165, 233, 0.3);
+      --accent2: #06b6d4;
+      --success: #2dd4bf;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --border: rgba(56, 189, 248, 0.12);
+      --glass-bg: rgba(15, 23, 42, 0.75);
+      --glass-border: rgba(56, 189, 248, 0.15);
+      --table-stripe: rgba(30, 41, 59, 0.6);
+      --chart-grid: rgba(56, 189, 248, 0.08);
+      --scrollbar-track: #1e293b;
+      --scrollbar-thumb: #0ea5e9;
+    }
+
+    [data-theme="emerald"] {
+      --bg-primary: #022c22;
+      --bg-secondary: #064e3b;
+      --bg-card: rgba(6, 78, 59, 0.82);
+      --bg-card-hover: rgba(4, 120, 87, 0.9);
+      --bg-modal: #064e3b;
+      --bg-header: rgba(2, 44, 34, 0.95);
+      --text-primary: #ecfdf5;
+      --text-secondary: #6ee7b7;
+      --text-muted: #34d399;
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.3);
+      --accent2: #14b8a6;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --border: rgba(52, 211, 153, 0.15);
+      --glass-bg: rgba(6, 78, 59, 0.7);
+      --glass-border: rgba(52, 211, 153, 0.18);
+      --table-stripe: rgba(4, 120, 87, 0.4);
+      --chart-grid: rgba(52, 211, 153, 0.1);
+      --scrollbar-track: #064e3b;
+      --scrollbar-thumb: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      direction: rtl;
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 4px;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-header);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background var(--transition);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 15px var(--accent-glow);
+    }
+
+    .logo-text h1 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+    [data-theme="combined"] .logo-text h1,
+    [data-theme="combined"] .header-left .clock-display,
+    [data-theme="combined"] .header-left .date-display {
+      color: var(--header-text, var(--text-primary));
+    }
+    [data-theme="combined"] .header .text-secondary-h {
+      color: var(--header-text-secondary, var(--text-secondary));
+    }
+
+    .logo-text p {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .clock-section {
+      text-align: left;
+      direction: ltr;
+    }
+
+    .clock-display {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 1px;
+    }
+
+    .date-display {
+      font-size: 11px;
+      color: var(--text-secondary);
+      direction: rtl;
+    }
+
+    .theme-selector {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 4px;
+    }
+
+    .theme-btn {
+      width: 34px;
+      height: 34px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      background: transparent;
+    }
+    .theme-btn:hover {
+      transform: scale(1.15);
+    }
+    .theme-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .upload-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .upload-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-main);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 4px 15px var(--accent-glow);
+    }
+    .upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px var(--accent-glow);
+    }
+    .upload-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .file-name {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .welcome-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 72px);
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .welcome-icon {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      margin-bottom: 32px;
+      box-shadow: 0 20px 60px var(--accent-glow);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    .welcome-screen h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .welcome-screen p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      max-width: 500px;
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .drop-zone {
+      width: 400px;
+      max-width: 90vw;
+      padding: 48px 32px;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      transform: scale(1.02);
+    }
+    .drop-zone p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .drop-zone .icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .main-content {
+      display: none;
+      padding: 24px;
+    }
+
+    .content-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-primary);
+    }
+    .section-title .bar {
+      width: 4px;
+      height: 28px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2));
+      border-radius: 2px;
+    }
+    .section-title .icon {
+      font-size: 28px;
+    }
+
+    .search-box {
+      position: relative;
+    }
+    .search-box input {
+      width: 300px;
+      padding: 12px 44px 12px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      font-size: 14px;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .search-box input:focus {
+      border-color: var(--accent);
+    }
+    .search-box .search-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 18px;
+    }
+
+    .search-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .equip-select {
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+      max-width: 240px;
+      transition: border-color var(--transition);
+    }
+    .equip-select:focus {
+      border-color: var(--accent);
+    }
+
+    .search-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      margin-top: 6px;
+      background: var(--bg-modal);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-card);
+      max-height: 280px;
+      overflow-y: auto;
+      z-index: 50;
+      display: none;
+    }
+    .search-dropdown.show {
+      display: block;
+    }
+    .search-dropdown-item {
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background var(--transition);
+    }
+    .search-dropdown-item:hover {
+      background: var(--accent-glow);
+    }
+    .search-dropdown-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .stat-card {
+      flex: 1;
+      min-width: 160px;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all var(--transition);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .stat-info h3 {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .stat-info p {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .insights-section {
+      margin-bottom: 28px;
+    }
+
+    .insights-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-primary);
+    }
+
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .insight-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: all var(--transition);
+    }
+    .insight-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .insight-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .insight-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .insight-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .insight-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .insight-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .insight-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--glass-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .insight-item:hover {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+    }
+
+    .insight-item-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .insight-item-rank {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .insight-item-rank.gold {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #1e293b;
+    }
+    .insight-item-rank.silver {
+      background: linear-gradient(135deg, #94a3b8, #64748b);
+      color: white;
+    }
+    .insight-item-rank.bronze {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: white;
+    }
+    .insight-item-rank.normal {
+      background: var(--border);
+      color: var(--text-secondary);
+    }
+
+    .insight-item-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .insight-item-value {
+      font-size: 14px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 8px;
+    }
+    .insight-item-value.high {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+    }
+    .insight-item-value.low {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+    }
+    .insight-item-value.warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+    }
+    .insight-item-value.success {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+    }
+    .insight-item-value.neutral {
+      background: var(--glass-bg);
+      color: var(--text-secondary);
+    }
+
+    .insight-empty {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 16px;
+    }
+
+    .equipment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .equipment-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+      border-right: 5px solid var(--card-color, var(--accent));
+    }
+    .equipment-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--card-color, linear-gradient(to bottom, var(--accent), var(--accent2)));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .equipment-card:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--card-color, var(--accent));
+    }
+    .equipment-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .card-tag {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-tag .tag-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--card-color, var(--accent-glow));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .card-badge {
+      font-size: 10px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .card-badge.kpi {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+    }
+
+    .card-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .card-stat-item {
+      text-align: center;
+      padding: 10px 6px;
+      background: var(--glass-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .card-stat-item .value {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .card-stat-item .label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .sparkline-container {
+      height: 50px;
+      position: relative;
+      margin-top: 10px;
+    }
+    .sparkline-container canvas {
+      width: 100% !important;
+      height: 50px !important;
+    }
+
+    .kpi-types-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .kpi-type-tag {
+      font-size: 10px;
+      padding: 3px 8px;
+      background: var(--accent-glow);
+      color: var(--accent);
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      width: 95vw;
+      max-width: 1300px;
+      max-height: 92vh;
+      background: var(--bg-modal);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.9) translateY(30px);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    }
+    .modal-overlay.active .modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      background: var(--glass-bg);
+      flex-shrink: 0;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-title .icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .modal-close {
+      width: 42px;
+      height: 42px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      font-family: inherit;
+    }
+    .modal-close:hover {
+      background: var(--danger);
+      color: white;
+      border-color: var(--danger);
+    }
+
+    .modal-body {
+      padding: 28px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-section {
+      margin-bottom: 28px;
+    }
+    .modal-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-section-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+    }
+
+    .modal-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      overflow-x: auto;
+    }
+
+    .modal-tab {
+      padding: 10px 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-main);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .modal-tab:hover {
+      color: var(--text-primary);
+      background: var(--border);
+    }
+    .modal-tab.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    .data-table-container {
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      background: var(--glass-bg);
+      padding: 12px 14px;
+      text-align: right;
+      font-weight: 700;
+      color: var(--accent);
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      color: var(--text-primary);
+    }
+
+    .data-table tr:nth-child(even) td {
+      background: var(--table-stripe);
+    }
+    .data-table tr:hover td {
+      background: var(--accent-glow);
+    }
+
+    .chart-container {
+      position: relative;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .chart-container canvas {
+      max-height: 350px;
+    }
+    .chart-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .kpi-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .kpi-selector-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-family: var(--font-main);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .kpi-selector-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .kpi-selector-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .period-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 8px 16px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      align-items: center;
+    }
+    .period-selector .period-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-left: 12px;
+    }
+    .period-btn {
+      padding: 6px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-family: var(--font-main);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .period-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .period-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .error-msg {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+      padding: 16px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      text-align: center;
+      margin: 20px 24px;
+      display: none;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+      }
+      50% {
+        opacity: 0.7;
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 12px;
+        height: 64px;
+      }
+      .logo-text h1 {
+        font-size: 14px;
+      }
+      .logo-text p {
+        display: none;
+      }
+      .equipment-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal {
+        width: 98vw;
+        max-height: 96vh;
+        border-radius: 14px;
+      }
+      .modal-body {
+        padding: 16px;
+      }
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      .search-box input {
+        width: 200px;
+      }
+      .card-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-left .clock-section {
+        display: none;
+      }
+      .upload-section .file-name {
+        display: none;
+      }
+      .theme-selector {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <header class="header">
+    <div class="header-right">
+      <div class="logo-section">
+        <div class="logo-icon">📈</div>
+        <div class="logo-text">
+          <h1>داشبورد شاخص‌های KPI</h1>
+          <p class="text-secondary-h">مجتمع پتروشیمی ایلام — شاخص‌های عملکرد کلیدی تجهیزات</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-left">
+      <div class="upload-section">
+        <span class="file-name" id="fileName"></span>
+        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          بارگذاری فایل
+        </button>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" onchange="handleFileUpload(event)">
+      </div>
+
+      <div class="theme-selector">
+        <button class="theme-btn active" data-theme="dark" title="مشکی" onclick="setTheme('dark')">🌑</button>
+        <button class="theme-btn" data-theme="light" title="سفید" onclick="setTheme('light')">⬜</button>
+        <button class="theme-btn" data-theme="combined" title="ترکیبی" onclick="setTheme('combined')">🌗</button>
+        <button class="theme-btn" data-theme="deepblue" title="آبی عمیق" onclick="setTheme('deepblue')">🔵</button>
+        <button class="theme-btn" data-theme="emerald" title="زمردی" onclick="setTheme('emerald')">🟢</button>
+      </div>
+
+      <div class="clock-section">
+        <div class="clock-display" id="clockDisplay">--:--:--</div>
+        <div class="date-display" id="dateDisplay">
+          <span class="live-dot"></span>
+          در حال بارگذاری...
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div id="welcomeScreen" class="welcome-screen">
+    <div class="welcome-icon">📊</div>
+    <h2>داشبورد شاخص‌های KPI تجهیزات</h2>
+    <p>
+      فایل اکسل شامل اطلاعات شاخص‌های KPI تجهیزات (MTBF، MTTR، Availability و...) را بارگذاری نمایید.
+      <br>
+      شیت اول فایل اکسل شامل داده‌های KPI می‌باشد.
+    </p>
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="icon">📁</div>
+      <p>فایل اکسل (.xlsx) را اینجا رها کنید یا کلیک نمایید</p>
+    </div>
+  </div>
+
+  <div id="mainContent" class="main-content">
+    <div class="content-header">
+      <div class="section-title">
+        <span class="bar"></span>
+        <span class="icon">📈</span>
+        شاخص‌های KPI تجهیزات
+      </div>
+      <div class="search-select-wrap">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchKpi" placeholder="جستجوی تگ تجهیز..." autocomplete="off" oninput="filterKpiCards()" onfocus="showKpiSearchDropdown()">
+          <div class="search-dropdown" id="kpiSearchDropdown"></div>
+        </div>
+        <select class="equip-select" id="kpiSelectDropdown" onchange="selectKpiFromDropdown(this.value)">
+          <option value="">— انتخاب تجهیز —</option>
+        </select>
+      </div>
+    </div>
+    <div class="stats-bar" id="kpiStatsBar"></div>
+
+    <div class="insights-section">
+      <div class="insights-title">💡 تحلیل سریع وضعیت تجهیزات</div>
+      <div class="insights-grid" id="kpiInsightsGrid"></div>
+    </div>
+
+    <div class="section-title" style="margin-bottom:20px;">
+      <span class="bar"></span>
+      لیست تجهیزات
+    </div>
+    <div class="equipment-grid" id="kpiEquipmentGrid"></div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="icon" id="modalIcon">📊</span>
+          <span id="modalTagName">--</span>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    let kpiData = {};
+    let allKpiTags = [];
+    let allKpiTypes = [];
+    let currentDisplayedKpiTags = [];
+    let sparklineCharts = {};
+    let modalCharts = [];
+    let tagColorMap = {};
+    let currentPeriod = 'monthly'; // پیش‌فرض ماهانه برای نمایش بهتر در کنار سال
+    let selectedYear = 'all'; // سال انتخاب شده توسط کاربر
+    let currentTagForModal = '';
+    let currentKpiTypeForModal = '__ALL__';
+
+    function setTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === theme);
+      });
+      if (allKpiTags.length > 0) {
+        setTimeout(() => renderKpiGrid(currentDisplayedKpiTags), 100);
+      }
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('clockDisplay').textContent = `${h}:${m}:${s}`;
+
+      try {
+        const jDate = jalaali.toJalaali(now.getFullYear(), now.getMonth() + 1, now.getDate());
+        const persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+          'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
+        ];
+        const dayNames = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'];
+        document.getElementById('dateDisplay').innerHTML =
+          `<span class="live-dot"></span> ${dayNames[now.getDay()]} ${jDate.jd} ${persianMonths[jDate.jm - 1]} ${jDate.jy}`;
+      } catch (e) {
+        document.getElementById('dateDisplay').innerHTML =
+          `<span class="live-dot"></span> ${now.toLocaleDateString('fa-IR')}`;
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    const dropZone = document.getElementById('dropZone');
+    ['dragenter', 'dragover'].forEach(evt => {
+      dropZone.addEventListener(evt, e => { e.preventDefault();
+        dropZone.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(evt => {
+      dropZone.addEventListener(evt, e => { e.preventDefault();
+        dropZone.classList.remove('dragover'); });
+    });
+    dropZone.addEventListener('drop', e => {
+      const file = e.dataTransfer.files[0];
+      if (file) processFile(file);
+    });
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) processFile(file);
+    }
+
+    function processFile(file) {
+      if (!file.name.match(/\.(xlsx|xls)$/i)) {
+        showError('لطفاً فقط فایل اکسل (.xlsx) بارگذاری کنید.');
+        return;
+      }
+
+      document.getElementById('fileName').textContent = file.name;
+      hideError();
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+
+          if (workbook.SheetNames.length < 1) {
+            showError('فایل اکسل حداقل باید یک شیت داشته باشد.');
+            return;
+          }
+
+          parseSheet1(workbook);
+          buildTagColorMap();
+          showMainContent();
+        } catch (err) {
+          console.error(err);
+          showError('خطا در پردازش فایل اکسل: ' + err.message);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function colorForTag(tag) {
+      if (!tagColorMap[tag]) {
+        const palette = generateColors(200);
+        tagColorMap[tag] = palette[Object.keys(tagColorMap).length % palette.length];
+      }
+      return tagColorMap[tag];
+    }
+
+    function buildTagColorMap() {
+      tagColorMap = {};
+      const palette = generateColors(allKpiTags.length);
+      allKpiTags.forEach((tag, i) => {
+        tagColorMap[tag] = palette[i % palette.length];
+      });
+    }
+
+    function parseSheet1(workbook) {
+      kpiData = {};
+      allKpiTags = [];
+      allKpiTypes = [];
+
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+      if (json.length < 2 || json[0].length < 3) {
+        console.warn('Sheet 1 structure invalid');
+        return;
+      }
+
+      const headerRow = json[0];
+      const tags = headerRow.slice(2).map(t => String(t).trim()).filter(t => t);
+      allKpiTags = tags;
+
+      tags.forEach(tag => { kpiData[tag] = {}; });
+
+      const kpiTypesSet = new Set();
+
+      for (let i = 1; i < json.length; i++) {
+        const row = json[i];
+        const dateVal = row[0] !== undefined && row[0] !== '' ? String(row[0]) : null;
+        const kpiType = row[1] !== undefined && row[1] !== '' ? String(row[1]).trim() : null;
+
+        if (!dateVal || !kpiType) continue;
+
+        kpiTypesSet.add(kpiType);
+
+        tags.forEach((tag, idx) => {
+          if (!kpiData[tag][kpiType]) {
+            kpiData[tag][kpiType] = { dates: [], values: [] };
+          }
+          const val = row[idx + 2];
+          const numVal = parseFloat(val);
+          kpiData[tag][kpiType].dates.push(dateVal);
+          kpiData[tag][kpiType].values.push(isNaN(numVal) ? null : numVal);
+        });
+      }
+
+      allKpiTypes = Array.from(kpiTypesSet);
+      console.log('Parsed KPI Data:', allKpiTags.length, 'tags,', allKpiTypes.length, 'KPI types');
+    }
+
+    // ------- توابع کمکی برای استخراج سال و گروه‌بندی بر اساس بازه زمانی -------
+    function parseDateToParts(dateVal) {
+      if (!dateVal) return null;
+      let str = String(dateVal).trim().replace(/\//g, '-');
+      const match = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if (match) {
+        return {
+          year: match[1],
+          month: match[2].padStart(2, '0'),
+          day: match[3].padStart(2, '0'),
+          original: str
+        };
+      }
+      const yearMatch = str.match(/^(\d{4})/);
+      if (yearMatch) {
+         return { year: yearMatch[1], month: '01', day: '01', original: str };
+      }
+      return null;
+    }
+
+    function getAvailableYearsForTag(tag) {
+      const tagData = kpiData[tag];
+      if (!tagData) return [];
+      const years = new Set();
+      Object.values(tagData).forEach(kpi => {
+        kpi.dates.forEach(d => {
+          const parsed = parseDateToParts(d);
+          if (parsed) years.add(parsed.year);
+        });
+      });
+      return Array.from(years).sort().reverse();
+    }
+
+    function aggregateDataByPeriod(dates, values, period, yearFilter = 'all') {
+      if (!dates || !values || dates.length === 0) return { dates: [], values: [] };
+
+      const grouped = {};
+      const persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+
+      for (let i = 0; i < dates.length; i++) {
+        let dateStr = String(dates[i]).trim();
+        if (!dateStr) continue;
+
+        const parsed = parseDateToParts(dateStr);
+        if (!parsed) continue;
+
+        const { year, month, day } = parsed;
+
+        if (yearFilter !== 'all' && year !== yearFilter) {
+          continue;
+        }
+
+        let key;
+        let displayKey;
+
+        if (period === 'daily') {
+          key = `${year}-${month}-${day}`;
+          displayKey = `${parseInt(day)} ${persianMonths[parseInt(month) - 1]} ${year}`;
+        } else if (period === 'monthly') {
+          key = `${year}-${month}`;
+          displayKey = `${persianMonths[parseInt(month) - 1]} ${year}`;
+        } else if (period === 'yearly') {
+          key = `${year}`;
+          displayKey = year;
+        } else {
+          key = dateStr;
+          displayKey = dateStr;
+        }
+
+        if (!grouped[key]) {
+          grouped[key] = { sum: 0, count: 0, displayKey: displayKey };
+        }
+        if (values[i] !== null && !isNaN(values[i])) {
+          grouped[key].sum += parseFloat(values[i]);
+          grouped[key].count += 1;
+        }
+      }
+
+      const sortedKeys = Object.keys(grouped).sort();
+      const aggDates = [];
+      const aggValues = [];
+
+      sortedKeys.forEach(k => {
+        aggDates.push(grouped[k].displayKey);
+        const avg = grouped[k].count > 0 ? grouped[k].sum / grouped[k].count : null;
+        aggValues.push(avg);
+      });
+
+      return { dates: aggDates, values: aggValues };
+    }
+    // ---------------------------------------------
+
+    function showMainContent() {
+      document.getElementById('welcomeScreen').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+
+      renderKpiStatsBar();
+      renderKpiInsights();
+      populateKpiSelectDropdown();
+      currentDisplayedKpiTags = [...allKpiTags];
+      renderKpiGrid(currentDisplayedKpiTags);
+    }
+
+    function getLatestValueForType(tag, typeKeyword) {
+      if (!kpiData[tag]) return null;
+      const kpiTypes = Object.keys(kpiData[tag]);
+      const matchedType = kpiTypes.find(t => t.toUpperCase().includes(typeKeyword.toUpperCase()));
+      if (!matchedType) return null;
+      const vals = kpiData[tag][matchedType].values;
+      for (let i = vals.length - 1; i >= 0; i--) {
+        if (vals[i] !== null) return vals[i];
+      }
+      return null;
+    }
+
+    function fmt2(v) {
+      if (v === null || v === undefined || isNaN(v)) return '-';
+      return Number(v).toFixed(2);
+    }
+
+    function fmtAvailability(v) {
+      if (v === null || v === undefined || isNaN(v)) return '-';
+      if (v <= 1) {
+        return (v * 100).toFixed(2) + '%';
+      }
+      return Number(v).toFixed(2) + '%';
+    }
+
+    function renderKpiStatsBar() {
+      let totalRecords = 0;
+      Object.values(kpiData).forEach(tagData => {
+        Object.values(tagData).forEach(kpi => {
+          totalRecords += kpi.values.filter(v => v !== null).length;
+        });
+      });
+
+      const stats = [
+        { icon: '⚙️', value: allKpiTags.length, label: 'تعداد تجهیزات', color: 'var(--accent)' },
+        { icon: '📊', value: allKpiTypes.length, label: 'نوع شاخص', color: 'var(--accent2)' },
+        { icon: '📋', value: totalRecords.toLocaleString('fa-IR'), label: 'تعداد رکورد', color: 'var(--success)' }
+      ];
+
+      document.getElementById('kpiStatsBar').innerHTML = stats.map((s, i) => `
+        <div class="stat-card fade-in-up" style="animation-delay:${i * 0.08}s">
+          <div class="stat-icon" style="background:${s.color}22; color:${s.color}">${s.icon}</div>
+          <div class="stat-info">
+            <h3 style="color:${s.color}">${s.value}</h3>
+            <p>${s.label}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderKpiInsights() {
+      const grid = document.getElementById('kpiInsightsGrid');
+
+      const classify = (name) => {
+        const n = String(name).toUpperCase();
+        if (n.includes('MTTR') || n.includes('تعمیر') || n.includes('REPAIR')) return 'repair';
+        if (n.includes('FAIL') || n.includes('خراب') || n.includes('FAULT') || n.includes('BREAKDOWN')) return 'failure';
+        if (n.includes('RUN') || n.includes('کارکرد') || n.includes('OPERAT') || n.includes('ساعت') || n
+          .includes('HOUR') || n
+          .includes('WORK')) return 'hours';
+        return 'index';
+      };
+
+      const latestValue = (tag, type) => {
+        const d = kpiData[tag] && kpiData[tag][type];
+        if (!d) return null;
+        for (let i = d.values.length - 1; i >= 0; i--) {
+          if (d.values[i] !== null) return d.values[i];
+        }
+        return null;
+      };
+
+      const buildRanked = (type, dir) => {
+        const arr = [];
+        allKpiTags.forEach(tag => {
+          const v = latestValue(tag, type);
+          if (v !== null) arr.push({ tag, value: v });
+        });
+        arr.sort((a, b) => dir === 'high' ? b.value - a.value : a.value - b.value);
+        return arr.slice(0, 5);
+      };
+
+      const fmtForType = (type, v) => {
+        const n = String(type).toUpperCase();
+        if (n.includes('AVAIL') || n.includes('دسترس')) return fmtAvailability(v);
+        return typeof v === 'number' ? v.toFixed(2) : v;
+      };
+
+      const buildCard = (title, subtitle, icon, iconBg, iconColor, ranked, valueClass, fmt, delay) => `
+        <div class="insight-card fade-in-up" style="animation-delay:${delay}s">
+          <div class="insight-header">
+            <div class="insight-icon" style="background:${iconBg};color:${iconColor}">${icon}</div>
+            <div>
+              <div class="insight-title">${title}</div>
+              <div class="insight-subtitle">${subtitle}</div>
+            </div>
+          </div>
+          <div class="insight-list">
+            ${ranked.length > 0 ? ranked.map((e, i) => `
+              <div class="insight-item" onclick="openKpiModalByTag('${e.tag}')">
+                <div class="insight-item-info">
+                  <span class="insight-item-rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : 'normal'}">${i + 1}</span>
+                  <span class="insight-item-name">${e.tag}</span>
+                </div>
+                <span class="insight-item-value ${valueClass}">${fmt(e.value)}</span>
+              </div>
+            `).join('') : '<div class="insight-empty">داده‌ای موجود نیست</div>'}
+          </div>
+        </div>
+      `;
+
+      const failureTypes = allKpiTypes.filter(t => classify(t) === 'failure');
+      const hoursTypes = allKpiTypes.filter(t => classify(t) === 'hours');
+      const otherTypes = allKpiTypes.filter(t => classify(t) === 'index' || classify(t) === 'repair');
+
+      let cards = [];
+      let delay = 0.1;
+
+      otherTypes.forEach(type => {
+        cards.push(buildCard(
+          `بیشترین «${type}»`, `تجهیزات با بالاترین مقدار این شاخص`,
+          '📈', 'rgba(239,68,68,0.15)', 'var(--danger)',
+          buildRanked(type, 'high'), 'high', (v) => fmtForType(type, v), delay
+        ));
+        delay += 0.05;
+        cards.push(buildCard(
+          `کمترین «${type}»`, `تجهیزات با پایین‌ترین مقدار این شاخص`,
+          '📉', 'rgba(59,130,246,0.15)', 'var(--accent)',
+          buildRanked(type, 'low'), 'low', (v) => fmtForType(type, v), delay
+        ));
+        delay += 0.05;
+      });
+
+      failureTypes.forEach(type => {
+        cards.push(buildCard(
+          `بیشترین خرابی «${type}»`, `تجهیزات با بیشترین خرابی`,
+          '🔧', 'rgba(239,68,68,0.15)', 'var(--danger)',
+          buildRanked(type, 'high'), 'high', (v) => fmtForType(type, v), delay
+        ));
+        delay += 0.05;
+        cards.push(buildCard(
+          `کمترین خرابی «${type}»`, `تجهیزات با کمترین خرابی`,
+          '🛡️', 'rgba(16,185,129,0.15)', 'var(--success)',
+          buildRanked(type, 'low'), 'success', (v) => fmtForType(type, v), delay
+        ));
+        delay += 0.05;
+      });
+
+      hoursTypes.forEach(type => {
+        cards.push(buildCard(
+          `بیشترین ساعت کارکرد «${type}»`, `تجهیزات با بیشترین کارکرد`,
+          '⏱️', 'rgba(245,158,11,0.15)', 'var(--warning)',
+          buildRanked(type, 'high'), 'warning', (v) => fmtForType(type, v), delay
+        ));
+        delay += 0.05;
+        cards.push(buildCard(
+          `کمترین ساعت کارکرد «${type}»`, `تجهیزات با کمترین کارکرد`,
+          '⏳', 'rgba(139,92,246,0.15)', 'var(--accent2)',
+          buildRanked(type, 'low'), 'neutral', (v) => fmtForType(type, v), delay
+        ));
+        delay += 0.05;
+      });
+
+      if (cards.length === 0) {
+        grid.innerHTML = '<div class="insight-empty">شاخصی برای تحلیل یافت نشد</div>';
+        return;
+      }
+
+      grid.innerHTML = cards.join('');
+    }
+
+    function openKpiModalByTag(tag) {
+      const idx = currentDisplayedKpiTags.indexOf(tag);
+      if (idx >= 0) {
+        openKpiModal(idx);
+      } else {
+        currentDisplayedKpiTags = [...allKpiTags];
+        const newIdx = currentDisplayedKpiTags.indexOf(tag);
+        if (newIdx >= 0) openKpiModal(newIdx);
+      }
+    }
+
+    function populateKpiSelectDropdown() {
+      const sel = document.getElementById('kpiSelectDropdown');
+      if (!sel) return;
+      sel.innerHTML = '<option value="">— انتخاب تجهیز —</option>' +
+        allKpiTags.map(tag => `<option value="${tag}">${tag}</option>`).join('');
+    }
+
+    function selectKpiFromDropdown(tag) {
+      if (!tag) return;
+      openKpiModalByTag(tag);
+      const sel = document.getElementById('kpiSelectDropdown');
+      if (sel) sel.value = '';
+    }
+
+    function showKpiSearchDropdown() {
+      filterKpiCards();
+    }
+
+    function renderKpiSearchDropdown(query, matches) {
+      const dd = document.getElementById('kpiSearchDropdown');
+      if (!dd) return;
+      if (!query) { dd.classList.remove('show');
+        dd.innerHTML = ''; return; }
+      if (matches.length === 0) {
+        dd.innerHTML = '<div class="search-dropdown-item" style="color:var(--text-muted)">موردی یافت نشد</div>';
+        dd.classList.add('show');
+        return;
+      }
+      dd.innerHTML = matches.slice(0, 12).map(tag => `
+        <div class="search-dropdown-item" onclick="pickKpiSearch('${tag}')">
+          <span class="search-dropdown-dot" style="background:${colorForTag(tag)}"></span>
+          ${tag}
+        </div>
+      `).join('');
+      dd.classList.add('show');
+    }
+
+    function pickKpiSearch(tag) {
+      const dd = document.getElementById('kpiSearchDropdown');
+      if (dd) dd.classList.remove('show');
+      document.getElementById('searchKpi').value = tag;
+      openKpiModalByTag(tag);
+    }
+
+    document.addEventListener('click', (e) => {
+      const box = document.querySelector('#mainContent .search-box');
+      if (box && !box.contains(e.target)) {
+        const dd = document.getElementById('kpiSearchDropdown');
+        if (dd) dd.classList.remove('show');
+      }
+    });
+
+    function renderKpiGrid(tags) {
+      Object.values(sparklineCharts).forEach(c => { try { c.destroy(); } catch (e) {} });
+      sparklineCharts = {};
+      currentDisplayedKpiTags = tags;
+
+      const grid = document.getElementById('kpiEquipmentGrid');
+
+      if (tags.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px;">تجهیزی یافت نشد</p>';
+        return;
+      }
+
+      grid.innerHTML = tags.map((tag, i) => {
+        const tagData = kpiData[tag];
+        const kpiTypes = Object.keys(tagData);
+        const color = colorForTag(tag);
+
+        const mtbf = getLatestValueForType(tag, 'MTBF');
+        const mttr = getLatestValueForType(tag, 'MTTR');
+        const avail = getLatestValueForType(tag, 'AVAIL');
+
+        let recordCount = 0;
+        kpiTypes.forEach(kpiType => {
+          recordCount += tagData[kpiType].values.filter(v => v !== null).length;
+        });
+
+        return `
+          <div class="equipment-card" onclick="openKpiModal(${i})" style="--card-color:${color};animation-delay:${i * 0.03}s">
+            <div class="card-header">
+              <div class="card-tag">
+                <span class="tag-icon" style="background:${color}">⚙️</span>
+                ${tag}
+              </div>
+              <span class="card-badge kpi" style="background:${color}22;color:${color}">${kpiTypes.length} شاخص</span>
+            </div>
+            <div class="card-stats">
+              <div class="card-stat-item">
+                <div class="value" style="color:${color}">${fmt2(mtbf)}</div>
+                <div class="label">MTBF</div>
+              </div>
+              <div class="card-stat-item">
+                <div class="value" style="color:${color}">${fmt2(mttr)}</div>
+                <div class="label">MTTR</div>
+              </div>
+              <div class="card-stat-item">
+                <div class="value" style="color:${color}">${fmtAvailability(avail)}</div>
+                <div class="label">Availability</div>
+              </div>
+            </div>
+            <div class="sparkline-container">
+              <canvas id="sparkKpi_${i}"></canvas>
+            </div>
+            <div class="kpi-types-list">
+              ${kpiTypes.slice(0, 5).map(t => `<span class="kpi-type-tag" style="background:${color}22;color:${color}">${t}</span>`).join('')}
+              ${kpiTypes.length > 5 ? `<span class="kpi-type-tag" style="background:${color}22;color:${color}">+${kpiTypes.length - 5}</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      requestAnimationFrame(() => {
+        tags.forEach((tag, i) => renderKpiSparkline(tag, i));
+      });
+    }
+
+    function renderKpiSparkline(tag, index) {
+      const canvas = document.getElementById(`sparkKpi_${index}`);
+      if (!canvas) return;
+
+      const tagData = kpiData[tag];
+      let allValues = [];
+      Object.values(tagData).forEach(kpi => {
+        allValues = allValues.concat(kpi.values.filter(v => v !== null));
+      });
+
+      if (allValues.length < 2) return;
+
+      const maxPoints = 40;
+      let plotValues = allValues;
+      if (allValues.length > maxPoints) {
+        const step = Math.ceil(allValues.length / maxPoints);
+        plotValues = allValues.filter((_, i) => i % step === 0);
+      }
+
+      const color = colorForTag(tag);
+
+      const chart = new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: plotValues.map((_, i) => i),
+          datasets: [{
+            data: plotValues,
+            borderColor: color,
+            borderWidth: 2,
+            fill: true,
+            backgroundColor: color + '18',
+            tension: 0.4,
+            pointRadius: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { enabled: false } },
+          scales: { x: { display: false }, y: { display: false } },
+          animation: { duration: 600 }
+        }
+      });
+
+      sparklineCharts[`kpi_${index}`] = chart;
+    }
+
+    function filterKpiCards() {
+      const query = document.getElementById('searchKpi').value.trim().toLowerCase();
+      const filtered = allKpiTags.filter(tag => tag.toLowerCase().includes(query));
+      renderKpiGrid(filtered);
+      renderKpiSearchDropdown(query, filtered);
+    }
+
+    // ----- توابع مربوط به بازه زمانی و سال -----
+    function changeYear(year) {
+      selectedYear = year;
+      if (currentTagForModal && currentKpiTypeForModal) {
+        selectKpi(currentTagForModal, currentKpiTypeForModal, document.querySelector('.kpi-selector-btn.active'));
+      }
+    }
+
+    function changePeriod(period, btn) {
+      currentPeriod = period;
+      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      if (currentTagForModal && currentKpiTypeForModal) {
+        selectKpi(currentTagForModal, currentKpiTypeForModal, document.querySelector('.kpi-selector-btn.active'));
+      }
+    }
+    // --------------------------------
+
+    function openKpiModal(index) {
+      const tag = currentDisplayedKpiTags[index];
+      if (!tag) return;
+      currentTagForModal = tag;
+      selectedYear = 'all'; // ریست کردن سال هنگام باز کردن مودال جدید
+
+      modalCharts.forEach(c => { try { c.destroy(); } catch (e) {} });
+      modalCharts = [];
+
+      document.getElementById('modalIcon').textContent = '📈';
+      document.getElementById('modalTagName').textContent = tag + ' — شاخص‌های KPI';
+
+      const tagData = kpiData[tag];
+      const kpiTypes = Object.keys(tagData);
+      
+      // استخراج سال‌های موجود برای این تجهیز
+      const availableYears = getAvailableYearsForTag(tag);
+      const yearOptions = `<option value="all">همه سال‌ها</option>` +
+        availableYears.map(y => `<option value="${y}">${y}</option>`).join('');
+
+      const body = document.getElementById('modalBody');
+      body.innerHTML = `
+        <div class="modal-section">
+          <div class="modal-section-title">📊 انتخاب نوع شاخص</div>
+          <div class="kpi-selector" id="kpiSelector">
+            <button class="kpi-selector-btn active" onclick="selectKpi('${tag}', '__ALL__', this)">همه شاخص‌ها</button>
+            ${kpiTypes.map(kpi => `<button class="kpi-selector-btn" onclick="selectKpi('${tag}', '${kpi}', this)">${kpi}</button>`).join('')}
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">📅 تنظیمات بازه زمانی</div>
+          <div class="period-selector" style="gap: 16px; flex-wrap: wrap;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="period-label">سال:</span>
+              <select id="yearSelect" class="equip-select" style="max-width:130px; padding:6px 12px; font-size:12px;" onchange="changeYear(this.value)">
+                ${yearOptions}
+              </select>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="period-label">نمایش بر اساس:</span>
+              <button class="period-btn ${currentPeriod === 'daily' ? 'active' : ''}" onclick="changePeriod('daily', this)">روزانه</button>
+              <button class="period-btn ${currentPeriod === 'monthly' ? 'active' : ''}" onclick="changePeriod('monthly', this)">ماهانه</button>
+              <button class="period-btn ${currentPeriod === 'yearly' ? 'active' : ''}" onclick="changePeriod('yearly', this)">سالانه</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-tabs">
+          <button class="modal-tab active" onclick="switchTab(event, 'tabCharts')">📈 نمودارها</button>
+          <button class="modal-tab" onclick="switchTab(event, 'tabTable')">📋 جدول داده‌ها</button>
+        </div>
+
+        <div class="tab-content active" id="tabCharts">
+          <div class="chart-container">
+            <div class="chart-title">روند شاخص در طول زمان</div>
+            <canvas id="modalLineChart"></canvas>
+          </div>
+          <div class="charts-grid">
+            <div class="chart-container">
+              <div class="chart-title">نمودار میله‌ای</div>
+              <canvas id="modalBarChart"></canvas>
+            </div>
+            <div class="chart-container">
+              <div class="chart-title">مقایسه شاخص‌ها</div>
+              <canvas id="modalCompareChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tabTable">
+          <div class="data-table-container" style="max-height:500px;" id="kpiTableContainer"></div>
+        </div>
+      `;
+
+      document.getElementById('modalOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      setTimeout(() => {
+        const activeBtn = document.querySelector('.kpi-selector-btn.active');
+        if (activeBtn) {
+          const kpiType = activeBtn.textContent.trim();
+          const realType = kpiType === 'همه شاخص‌ها' ? '__ALL__' : kpiType;
+          currentKpiTypeForModal = realType;
+          selectKpi(tag, realType, activeBtn);
+        }
+      }, 50);
+    }
+
+    function selectKpi(tag, kpiType, btn) {
+      document.querySelectorAll('.kpi-selector-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      currentTagForModal = tag;
+      currentKpiTypeForModal = kpiType;
+
+      modalCharts.forEach(c => { try { c.destroy(); } catch (e) {} });
+      modalCharts = [];
+
+      const tagData = kpiData[tag];
+      let dates = [];
+      let values = [];
+      let datasets = [];
+
+      const colors = generateColors(Object.keys(tagData).length);
+
+      if (kpiType === '__ALL__') {
+        const kpiTypes = Object.keys(tagData);
+        kpiTypes.forEach((kpi, idx) => {
+          const rawDates = tagData[kpi].dates;
+          const rawValues = tagData[kpi].values;
+          const agg = aggregateDataByPeriod(rawDates, rawValues, currentPeriod, selectedYear);
+          datasets.push({
+            label: kpi,
+            data: agg.values,
+            borderColor: colors[idx],
+            backgroundColor: colors[idx] + '20',
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: agg.values.length < 30 ? 3 : 0
+          });
+          if (agg.dates.length > dates.length) dates = agg.dates;
+        });
+      } else {
+        const rawDates = tagData[kpiType].dates;
+        const rawValues = tagData[kpiType].values;
+        const agg = aggregateDataByPeriod(rawDates, rawValues, currentPeriod, selectedYear);
+        dates = agg.dates;
+        values = agg.values;
+        datasets.push({
+          label: kpiType,
+          data: values,
+          borderColor: colors[0],
+          backgroundColor: colors[0] + '30',
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.35,
+          pointRadius: values.length < 30 ? 4 : 0
+        });
+      }
+
+      const textSecondary = getComputedStyle(document.body).getPropertyValue('--text-secondary').trim();
+      const gridColor = getComputedStyle(document.body).getPropertyValue('--chart-grid').trim();
+
+      const lineCanvas = document.getElementById('modalLineChart');
+      if (lineCanvas) {
+        modalCharts.push(new Chart(lineCanvas.getContext('2d'), {
+          type: 'line',
+          data: { labels: dates, datasets: datasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: datasets.length > 1, position: 'top', rtl: true,
+              labels: { color: textSecondary, font: { family: 'Vazirmatn', size: 11 } } },
+              tooltip: { rtl: true, titleFont: { family: 'Vazirmatn' }, bodyFont: { family: 'Vazirmatn' } }
+            },
+            scales: {
+              x: { ticks: { color: textSecondary, maxTicksLimit: 15 }, grid: { color: gridColor } },
+              y: { ticks: { color: textSecondary }, grid: { color: gridColor } }
+            }
+          }
+        }));
+      }
+
+      const barCanvas = document.getElementById('modalBarChart');
+      if (barCanvas && (kpiType !== '__ALL__' || datasets.length === 1)) {
+        const barData = kpiType === '__ALL__' ? datasets[0].data : values;
+        const barLabels = dates.slice(0, 50);
+        modalCharts.push(new Chart(barCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: barLabels,
+            datasets: [{
+              label: kpiType === '__ALL__' ? Object.keys(tagData)[0] : kpiType,
+              data: barData.slice(0, 50),
+              backgroundColor: colors[0] + '88',
+              borderRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { display: barLabels.length < 20, ticks: { color: textSecondary }, grid: { color: gridColor } },
+              y: { ticks: { color: textSecondary }, grid: { color: gridColor } }
+            }
+          }
+        }));
+      }
+
+      const compareCanvas = document.getElementById('modalCompareChart');
+      if (compareCanvas) {
+        const kpiTypes = Object.keys(tagData);
+        const avgValues = kpiTypes.map(kpi => {
+          const rawVals = tagData[kpi].values.filter(v => v !== null);
+          if (rawVals.length === 0) return 0;
+          return rawVals.reduce((a, b) => a + b, 0) / rawVals.length;
+        });
+
+        modalCharts.push(new Chart(compareCanvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: kpiTypes,
+            datasets: [{ label: 'میانگین', data: avgValues, backgroundColor: colors, borderRadius: 6 }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { color: textSecondary }, grid: { color: gridColor } },
+              y: { ticks: { color: textSecondary, font: { family: 'Vazirmatn', size: 10 } }, grid: { color: gridColor } }
+            }
+          }
+        }));
+      }
+
+      renderKpiTable(tag, kpiType);
+    }
+
+    function renderKpiTable(tag, kpiType) {
+      const container = document.getElementById('kpiTableContainer');
+      const tagData = kpiData[tag];
+
+      let rows = [];
+
+      if (kpiType === '__ALL__') {
+        Object.keys(tagData).forEach(kpi => {
+          const rawDates = tagData[kpi].dates;
+          const rawValues = tagData[kpi].values;
+          const agg = aggregateDataByPeriod(rawDates, rawValues, currentPeriod, selectedYear);
+          for (let i = 0; i < agg.dates.length; i++) {
+            rows.push({ date: agg.dates[i], kpi, value: agg.values[i] });
+          }
+        });
+      } else {
+        const rawDates = tagData[kpiType].dates;
+        const rawValues = tagData[kpiType].values;
+        const agg = aggregateDataByPeriod(rawDates, rawValues, currentPeriod, selectedYear);
+        for (let i = 0; i < agg.dates.length; i++) {
+          rows.push({ date: agg.dates[i], kpi: kpiType, value: agg.values[i] });
+        }
+      }
+
+      container.innerHTML = `
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ردیف</th>
+              <th>تاریخ</th>
+              <th>نوع شاخص</th>
+              <th>مقدار (میانگین)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map((r, i) => {
+              let displayVal = '-';
+              if (r.value !== null) {
+                const n = String(r.kpi).toUpperCase();
+                if (n.includes('AVAIL') || n.includes('دسترس')) {
+                  displayVal = fmtAvailability(r.value);
+                } else {
+                  displayVal = typeof r.value === 'number' ? r.value.toFixed(2) : r.value;
+                }
+              }
+              return `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td>${r.date}</td>
+                  <td>${r.kpi}</td>
+                  <td>${displayVal}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      modalCharts.forEach(c => { try { c.destroy(); } catch (e) {} });
+      modalCharts = [];
+    }
+
+    function closeModalOutside(event) {
+      if (event.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    function switchTab(event, tabId) {
+      const tabsWrap = event.target.closest('.modal-tabs').parentElement;
+      tabsWrap.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+      tabsWrap.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function generateColors(count) {
+      const palette = [
+        '#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6',
+        '#ec4899', '#06b6d4', '#f97316', '#84cc16', '#6366f1',
+        '#14b8a6', '#e11d48', '#a855f7', '#22d3ee', '#eab308',
+        '#64748b', '#0ea5e9', '#d946ef', '#fb923c', '#4ade80',
+        '#f43f5e', '#0891b2', '#7c3aed', '#65a30d', '#ca8a04',
+        '#db2777', '#2563eb', '#16a34a', '#dc2626', '#9333ea'
+      ];
+      return Array.from({ length: count }, (_, i) => palette[i % palette.length]);
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 8000);
+    }
+
+    function hideError() {
+      document.getElementById('errorMsg').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
