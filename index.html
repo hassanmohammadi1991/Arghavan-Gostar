@@ -1525,6 +1525,11 @@ tbody tr:hover { background: var(--bg-secondary); }
                             توزیع بر اساس نوع توقف
                         </div>
                         <div class="chart-controls">
+                            <div class="time-selector" data-chart="typeChart">
+                                <button class="time-btn active" data-range="all">کل</button>
+                                <button class="time-btn" data-range="month">ماه</button>
+                                <button class="time-btn" data-range="year">سال</button>
+                            </div>
                             <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('typeChart')">
                                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                             </button>
@@ -1547,6 +1552,11 @@ tbody tr:hover { background: var(--bg-secondary); }
                             توزیع بر اساس دسته علت
                         </div>
                         <div class="chart-controls">
+                            <div class="time-selector" data-chart="causeChart">
+                                <button class="time-btn active" data-range="all">کل</button>
+                                <button class="time-btn" data-range="month">ماه</button>
+                                <button class="time-btn" data-range="year">سال</button>
+                            </div>
                             <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('causeChart')">
                                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                             </button>
@@ -1569,6 +1579,11 @@ tbody tr:hover { background: var(--bg-secondary); }
                             تولید از دست‌رفته بر اساس واحد
                         </div>
                         <div class="chart-controls">
+                            <div class="time-selector" data-chart="lossChart">
+                                <button class="time-btn active" data-range="all">کل</button>
+                                <button class="time-btn" data-range="month">ماه</button>
+                                <button class="time-btn" data-range="year">سال</button>
+                            </div>
                             <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('lossChart')">
                                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                             </button>
@@ -1591,6 +1606,11 @@ tbody tr:hover { background: var(--bg-secondary); }
                             وضعیت اقدامات
                         </div>
                         <div class="chart-controls">
+                            <div class="time-selector" data-chart="statusChart">
+                                <button class="time-btn active" data-range="all">کل</button>
+                                <button class="time-btn" data-range="month">ماه</button>
+                                <button class="time-btn" data-range="year">سال</button>
+                            </div>
                             <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('statusChart')">
                                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                             </button>
@@ -1613,6 +1633,11 @@ tbody tr:hover { background: var(--bg-secondary); }
                             توزیع بر اساس مسئول پیگیری
                         </div>
                         <div class="chart-controls">
+                            <div class="time-selector" data-chart="responsibleChart">
+                                <button class="time-btn active" data-range="all">کل</button>
+                                <button class="time-btn" data-range="month">ماه</button>
+                                <button class="time-btn" data-range="year">سال</button>
+                            </div>
                             <button class="chart-action-btn" onclick="event.stopPropagation(); exportChart('responsibleChart')">
                                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                             </button>
@@ -1807,9 +1832,11 @@ let columnFilters = {};
 let chartTimeRanges = {
     trendChart: 'month',
     cumulativeChart: 'month',
-    typeChart: 'month',
-    causeChart: 'month',
-    lossChart: 'month'
+    typeChart: 'all',
+    causeChart: 'all',
+    lossChart: 'all',
+    statusChart: 'all',
+    responsibleChart: 'all'
 };
 
 const PERSIAN_DIGITS = ['۰','۱','۲','۳','۴','','۶','۷','۸','۹'];
@@ -2212,11 +2239,14 @@ function renderChartById(chartId) {
         case 'typeChart': renderTypeChart(); break;
         case 'causeChart': renderCauseChart(); break;
         case 'lossChart': renderLossChart(); break;
+        case 'statusChart': renderStatusChart(); break;
+        case 'responsibleChart': renderResponsibleChart(); break;
     }
 }
 
 function getTimeKey(d, range) {
     if (!d.startDate) return null;
+    if (range === 'all') return 'کل داده‌ها';
     if (range === 'day') return `${d.startDate.y}/${String(d.startDate.m).padStart(2,'0')}/${String(d.startDate.d).padStart(2,'0')}`;
     if (range === 'month') return `${d.startDate.y}/${String(d.startDate.m).padStart(2,'0')}`;
     return `${d.startDate.y}`;
@@ -2341,6 +2371,7 @@ function renderTypeChart() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const colors = getChartColors();
+    const range = chartTimeRanges.typeChart;
     
     const data = {};
     filteredData.forEach(d => {
@@ -2373,6 +2404,7 @@ function renderCauseChart() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const colors = getChartColors();
+    const range = chartTimeRanges.causeChart;
     
     const data = {};
     filteredData.forEach(d => {
@@ -2404,6 +2436,7 @@ function renderLossChart() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const colors = getChartColors();
+    const range = chartTimeRanges.lossChart;
     
     const data = {};
     filteredData.forEach(d => {
@@ -2435,6 +2468,7 @@ function renderStatusChart() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const colors = getChartColors();
+    const range = chartTimeRanges.statusChart;
     
     const data = {};
     filteredData.forEach(d => {
@@ -2467,6 +2501,7 @@ function renderResponsibleChart() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const colors = getChartColors();
+    const range = chartTimeRanges.responsibleChart;
     
     const data = {};
     filteredData.forEach(d => {
